@@ -1,4 +1,4 @@
-/* Basic styling for body */
+/* Basic styling */
 body {
   font-family: Arial, sans-serif;
   text-align: center;
@@ -8,7 +8,7 @@ body {
   padding: 20px;
 }
 
-/* Center the app and style */
+/* Center the app */
 #app {
   max-width: 600px;
   margin: 0 auto;
@@ -16,22 +16,22 @@ body {
 
 /* Progress Bar Styling */
 .progress-container {
-  width: 80%; /* Bar spans 80% of the screen */
-  background-color: #ddd; /* Light gray */
+  width: 80%;
+  background-color: #ddd;
   height: 20px;
   border-radius: 10px;
-  margin: 20px auto; /* Center it vertically */
+  margin: 20px auto;
 }
 
 .progress-bar {
-  width: 0%; /* Will grow dynamically */
-  height: 100%; /* Full height of container */
-  background-color: #007bff; /* Blue bar */
-  border-radius: 10px; /* Rounded corners */
-  transition: width 0.5s ease-in-out; /* Smooth visual update */
+  width: 0%;
+  height: 100%;
+  background-color: #28a745; /* Green bar */
+  border-radius: 10px;
+  transition: width 0.5s ease-in-out; /* Smooth progress bar animation */
 }
 
-/* Button styling */
+/* Buttons */
 button {
   margin: 15px auto;
   padding: 10px 20px;
@@ -47,7 +47,7 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Hide elements */
+/* Hide unused parts of the game */
 .hidden {
   display: none;
 }
@@ -60,4 +60,14 @@ h2 {
   display: block;
   width: 80%;
   margin: 10px auto;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.options button:hover {
+  background-color: #0056b3;
 }
