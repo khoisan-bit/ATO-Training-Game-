@@ -26,9 +26,9 @@ body {
 .progress-bar {
   width: 0%;
   height: 100%;
-  background-color: #28a745; /* Green bar */
+  background-color: #28a745;
   border-radius: 10px;
-  transition: width 0.5s ease-in-out; /* Smooth progress bar animation */
+  transition: width 0.5s ease-in-out;
 }
 
 /* Buttons */
@@ -70,4 +70,10 @@ h2 {
 
 .options button:hover {
   background-color: #0056b3;
+}
+
+/* Feedback Styling */
+#feedback {
+  font-size: 18px;
+  margin: 10px auto;
 }
