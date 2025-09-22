@@ -20,24 +20,23 @@
       <button id="start-btn">Start Game</button>
     </div>
 
-    <!-- Game Screen -->
+    <!-- Quiz Game Screen -->
     <div id="quiz-level" class="hidden">
-      <h2 id="question">What is an account takeover (ATO)?</h2>
+      <h2 id="question">Loading question...</h2>
       <div class="options">
-        <button class="option" onclick="checkAnswer(this, false)">A) A legitimate customer logs in to their account.</button>
-        <button class="option" onclick="checkAnswer(this, true)">B) A malicious actor gains access to an account without authorization.</button>
-        <button class="option" onclick="checkAnswer(this, false)">C) A customer voluntarily shares their account details with another person.</button>
+        <!-- Dynamic options will be added here -->
       </div>
-      <button id="next-question" class="hidden" onclick="showNextQuestion()">Next</button>
+      <button id="next-question" class="hidden" onclick="showNextQuestion()">Next Question</button>
     </div>
 
     <!-- End Screen -->
     <div id="end-screen" class="hidden">
       <h2>Congratulations! 🎉</h2>
-      <p>Your final score is: <span id="score"></span></p>
+      <p>You completed the game! Your final score is: <span id="score"></span></p>
       <button onclick="restartGame()">Play Again</button>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
