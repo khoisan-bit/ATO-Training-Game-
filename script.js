@@ -27,6 +27,22 @@ const levels = [
       { text: "Regular account activity.", isCorrect: false },
       { text: "Browsing the internet anonymously.", isCorrect: false }
     ]
+  },
+  {
+    question: "What is phishing?",
+    options: [
+      { text: "Stealing account details through fake emails.", isCorrect: true },
+      { text: "Browsing the web with security software.", isCorrect: false },
+      { text: "Copying files legally via cloud storage.", isCorrect: false }
+    ]
+  },
+  {
+    question: "Which of the following should NOT be used as a password?",
+    options: [
+      { text: "Your mother's maiden name.", isCorrect: false },
+      { text: "A random string of letters, numbers, and special characters.", isCorrect: true },
+      { text: "A combination of your name and birthday.", isCorrect: false }
+    ]
   }
 ];
 
@@ -50,24 +66,26 @@ function showLevel() {
   const level = levels[currentLevel];
   const questionElement = document.getElementById('question');
   const optionsElement = document.querySelector('.options');
-  
+  const feedbackElement = document.getElementById('feedback'); // Get feedback element
+
   // Update the question text
   questionElement.textContent = level.question;
 
-  // Clear out old options
-  optionsElement.innerHTML = "";
+  // Clear old feedback and options
+  feedbackElement.textContent = ""; // Reset feedback
+  optionsElement.innerHTML = ""; // Clear options
 
   // Create option buttons
   level.options.forEach(option => {
     const button = document.createElement('button');
-    button.textContent = option.text; // Set the button text
-    button.classList.add('option');
-    button.addEventListener('click', () => handleAnswer(option.isCorrect)); // Add click listener
-    optionsElement.appendChild(button); // Add button to the options container
+    button.textContent = option.text; // Add text to button
+    button.classList.add('option'); // Add styling class
+    button.addEventListener('click', () => handleAnswer(option.isCorrect)); // Add click event
+    optionsElement.appendChild(button); // Append button to options container
   });
 
   // Update the progress bar
-  const progress = ((currentLevel + 1) / levels.length) * 100; // Percentage
+  const progress = ((currentLevel + 1) / levels.length) * 100; // Calculate percentage
   const progressBar = document.getElementById('progress-bar');
   progressBar.style.width = `${progress}%`; // Update the width
 }
@@ -75,16 +93,19 @@ function showLevel() {
 // Function to Handle Answer Selection
 function handleAnswer(isCorrect) {
   const nextButton = document.getElementById('next-question');
+  const feedbackElement = document.getElementById('feedback'); // Get feedback element
 
-  // Feedback for correct/incorrect answers
+  // Show feedback and update score
   if (isCorrect) {
-    score += 10; // Add 10 points for correct answers
-    alert("Correct! Great job!");
+    score += 10; // Add points for correct answer
+    feedbackElement.textContent = "Correct! Great job!"; // Correct feedback
+    feedbackElement.style.color = "green"; // Green for correct
   } else {
-    alert("Incorrect. Keep trying!");
+    feedbackElement.textContent = "Incorrect. Try again!"; // Incorrect feedback
+    feedbackElement.style.color = "red"; // Red for incorrect
   }
 
-  // Show the "Next Question" button
+  // Show the "Next Question" button to move forward
   nextButton.classList.remove('hidden');
 }
 
