@@ -1,3 +1,8 @@
+// Game Variables
+let score = 0; // Player's score
+let currentLevel = 0; // Tracks the current level
+
+// Define the levels
 const levels = [
   {
     question: "What is an account takeover (ATO)?",
@@ -24,3 +29,91 @@ const levels = [
     ]
   }
 ];
+
+// Event Listeners
+document.getElementById('start-btn').addEventListener('click', startGame);
+
+// Function to Start the Game
+function startGame() {
+  currentLevel = 0; // Reset to the first level
+  score = 0; // Reset score
+  showLevel(); // Show the first level
+}
+
+// Function to Display the Current Level
+function showLevel() {
+  // Hide the welcome screen and show the quiz screen
+  document.getElementById('welcome-screen').classList.add('hidden');
+  document.getElementById('quiz-level').classList.remove('hidden');
+
+  // Get the current level data
+  const level = levels[currentLevel];
+  const questionElement = document.getElementById('question');
+  const optionsElement = document.querySelector('.options');
+  
+  // Update the question text
+  questionElement.textContent = level.question;
+
+  // Clear out old options
+  optionsElement.innerHTML = "";
+
+  // Create option buttons
+  level.options.forEach(option => {
+    const button = document.createElement('button');
+    button.textContent = option.text; // Set the button text
+    button.classList.add('option');
+    button.addEventListener('click', () => handleAnswer(option.isCorrect)); // Add click listener
+    optionsElement.appendChild(button); // Add button to the options container
+  });
+
+  // Update the progress bar
+  const progress = ((currentLevel + 1) / levels.length) * 100; // Percentage
+  const progressBar = document.getElementById('progress-bar');
+  progressBar.style.width = `${progress}%`; // Update the width
+}
+
+// Function to Handle Answer Selection
+function handleAnswer(isCorrect) {
+  const nextButton = document.getElementById('next-question');
+
+  // Feedback for correct/incorrect answers
+  if (isCorrect) {
+    score += 10; // Add 10 points for correct answers
+    alert("Correct! Great job!");
+  } else {
+    alert("Incorrect. Keep trying!");
+  }
+
+  // Show the "Next Question" button
+  nextButton.classList.remove('hidden');
+}
+
+// Function to Show the Next Level
+function showNextQuestion() {
+  currentLevel++; // Proceed to the next level
+
+  // Check if there are more levels or if the game is over
+  if (currentLevel < levels.length) {
+    showLevel(); // Show the next level
+    document.getElementById('next-question').classList.add('hidden'); // Hide the "Next" button
+  } else {
+    finishGame(); // End the game
+  }
+}
+
+// Function to Finish the Game
+function finishGame() {
+  // Hide the quiz screen and show the end screen
+  document.getElementById('quiz-level').classList.add('hidden');
+  document.getElementById('end-screen').classList.remove('hidden');
+
+  // Show the player's final score
+  document.getElementById('score').textContent = score;
+}
+
+// Function to Restart the Game
+function restartGame() {
+  // Reset everything and go back to the welcome screen
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('welcome-screen').classList.remove('hidden');
+}
