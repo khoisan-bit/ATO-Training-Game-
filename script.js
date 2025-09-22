@@ -37,7 +37,7 @@ const levels = [
     ]
   },
   {
-    question: "Which of the following should NOT be used as a password?",
+    question: "Which of the following should be used as a password?",
     options: [
       { text: "Your mother's maiden name.", isCorrect: false },
       { text: "A random string of letters, numbers, and special characters.", isCorrect: true },
