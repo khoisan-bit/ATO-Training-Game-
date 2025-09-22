@@ -1,39 +1,63 @@
-/* styles.css */
+/* Basic styling for body */
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  margin: 0;
-  padding: 0;
   background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 20px;
 }
 
+/* Center the app and style */
 #app {
-  padding: 20px;
   max-width: 600px;
   margin: 0 auto;
 }
 
-.hidden {
-  display: none;
+/* Progress Bar Styling */
+.progress-container {
+  width: 80%; /* Bar spans 80% of the screen */
+  background-color: #ddd; /* Light gray */
+  height: 20px;
+  border-radius: 10px;
+  margin: 20px auto; /* Center it vertically */
 }
 
+.progress-bar {
+  width: 0%; /* Will grow dynamically */
+  height: 100%; /* Full height of container */
+  background-color: #007bff; /* Blue bar */
+  border-radius: 10px; /* Rounded corners */
+  transition: width 0.5s ease-in-out; /* Smooth visual update */
+}
+
+/* Button styling */
 button {
-  margin: 10px;
-  padding: 10px 15px;
+  margin: 15px auto;
+  padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
   font-size: 16px;
+  cursor: pointer;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
+/* Hide elements */
+.hidden {
+  display: none;
+}
+
+h2 {
+  font-size: 24px;
+}
+
 .options button {
   display: block;
-  margin: auto;
-  margin-bottom: 15px;
+  width: 80%;
+  margin: 10px auto;
 }

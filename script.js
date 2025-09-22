@@ -1,9 +1,10 @@
-// script.js
+// Store game progress
 let score = 0;
 let currentLevel = 0;
 
+// Define levels
 const levels = [
-  // Quiz Level
+  // Level 1
   {
     id: 'quiz-level',
     question: 'What is an account takeover (ATO)?',
@@ -13,61 +14,65 @@ const levels = [
       { text: 'C) A customer voluntarily shares their account details with another person.', correct: false }
     ]
   },
-  // Spot the Red Flags Level
-  {
-    id: 'red-flag-level',
-    question: 'What should you do when detecting a suspicious login?',
-    options: [
-      { text: 'A) Block the account.', correct: true },
-      { text: 'B) Notify the user.', correct: false },
-      { text: 'C) Allow activity to continue.', correct: false }
-    ]
-  }
+  // Additional levels can go here!
 ];
 
-// Show welcome screen
+// Start the game when "Start Game" is clicked
 document.getElementById('start-btn').addEventListener('click', () => showLevel(0));
 
 function showLevel(levelIndex) {
-  // Hide all levels
-  document.querySelectorAll('.hidden').forEach(screen => {
-    screen.classList.add('hidden');
-  });
+  // Hide all sections
+  document.querySelectorAll('.hidden').forEach(screen => screen.classList.add('hidden'));
 
-  // Show selected level
+  // Show the current level
   document.getElementById(levels[levelIndex].id).classList.remove('hidden');
-  if (levels[levelIndex].id === 'quiz-level') {
-    document.getElementById('question').textContent = levels[levelIndex].question;
-  }
+
+  // Update the question text
+  document.getElementById('question').textContent = levels[levelIndex].question;
+
+  // Update progress bar
+  updateProgress(levelIndex);
+
+  // Save current level
   currentLevel = levelIndex;
+}
+
+function updateProgress(levelIndex) {
+  const progress = ((levelIndex + 1) / levels.length) * 100; // Calculate percentage
+  document.getElementById('progress-bar').style.width = progress + '%'; // Update bar
 }
 
 function checkAnswer(button, isCorrect) {
   if (isCorrect) {
-    score += 10;
+    score += 10; // Increase score for correct answer
     button.style.backgroundColor = 'green';
   } else {
     button.style.backgroundColor = 'red';
   }
-  document.getElementById('next-question')?.classList.remove('hidden');
-  if (currentLevel === levels.length - 1) {
-    document.getElementById('finish-game')?.classList.remove('hidden');
-  }
+  document.getElementById('next-question').classList.remove('hidden'); // Show next button
 }
 
 function showNextQuestion() {
   if (currentLevel + 1 < levels.length) {
-    showLevel(currentLevel + 1);
+    showLevel(currentLevel + 1); // Go to next level
+  } else {
+    finishGame();
   }
 }
 
 function finishGame() {
+  // Hide all sections
   document.querySelectorAll('.hidden').forEach(screen => screen.classList.add('hidden'));
+
+  // Show end screen
   document.getElementById('end-screen').classList.remove('hidden');
+
+  // Display final score
   document.getElementById('score').textContent = score;
 }
 
 function restartGame() {
+  // Reset the game
   score = 0;
-  showLevel(0);
+  showLevel(0); // Start from the beginning
 }
