@@ -1,132 +1,185 @@
-// Quiz Data with 14 Questions
+// Quiz Questions and Hints
 const levels = [
   {
     question: "What is an account takeover (ATO)?",
     answers: [
       { text: "Legitimate customer login.", correct: false },
       { text: "Malicious actor gains access.", correct: true },
-      { text: "Simulations for user accounts.", correct: false }
-    ],
-    hint: "Hint: ATO involves unauthorized access to an account."
-  },
-  {
-    question: "Which behavior is a red flag for phishing?",
-    answers: [
-      { text: "Generic greetings like 'Dear Customer'.", correct: true },
-      { text: "Properly formatted domain names.", correct: false },
-      { text: "Well-written subject line.", correct: false }
-    ],
-    hint: "Hint: Phishing often tries to appear generic yet trustworthy."
-  },
-  {
-    question: "What does the ATO_INV_LATO system represent?",
-    answers: [
-      { text: "ATO Lock Investigations.", correct: true },
-      { text: "A maligned lock queue.", correct: false },
-      { text: "Authentication resets.", correct: false }
-    ],
-    hint: "Hint: Think Lock Investigation Trail System."
-  }
-  // Complete with your remaining 11 questions
-];
-
-let score = 0; // Player's current score
-let currentLevel = 0; // Tracks which question/player is answering
-let timer;
-const maxQuestions = 14;
-
-const progressBar = document.getElementById("progress-bar");
-const questionElement = document.getElementById("question");
-const answersContainer = document.getElementById("answers");
-const timerElement = document.getElementById("timer");
-const scoreTracker = document.getElementById("score-tracker");
-const finalScoreElement = document.getElementById("final-score");
-const hintText = document.getElementById("hint-text");
-const certificateButton = document.getElementById("certificate-btn");
-
-// Transition & Render Button Before NEXT
-document.getElementById("",showConfetti); this-->.statement'sClass
-Apologies, my response got cut off. Here's the **complete code** for the `script.js` file ensuring **all 14 questions** work properly along with the timer, hints, dynamic progress bar, scoring, and certificate download functionality:
-
----
-
-### **3. Final JavaScript (script.js)**
-
-```javascript
-// Quiz Data with 14 Questions
-const levels = [
-  {
-    question: "What is an account takeover (ATO)?",
-    answers: [
-      { text: "Legitimate customer login.", correct: false },
-      { text: "Malicious actor gains access.", correct: true },
-      { text: "Simulations for user accounts.", correct: false }
+      { text: "Simulating accounts for testing.", correct: false }
     ],
     hint: "Hint: ATO involves unauthorized access to a valid account."
   },
   {
-    question: "Which behavior is a red flag for phishing?",
+    question: "Which is a red flag for phishing?",
     answers: [
       { text: "Generic greetings like 'Dear Customer'.", correct: true },
-      { text: "Properly formatted domain names.", correct: false },
-      { text: "Well-constructed graphics.", correct: false }
+      { text: "Proper domain spelling.", correct: false },
+      { text: "Well-constructed subject.", correct: false }
     ],
-    hint: "Hint: Phishing emails are often generic but seem trustworthy."
+    hint: "Hint: Phishing emails often use generic introductions."
   },
   {
-    question: "What does the ATO_INV_LATO system represent?",
+    question: "What does ATO_INV_LATO stand for?",
     answers: [
       { text: "ATO Lock Investigations.", correct: true },
       { text: "A mislabeled lock queue.", correct: false },
-      { text: "Authentication lock reset.", correct: false }
+      { text: "Authentication lock reset system.", correct: false }
     ],
-    hint: "Hint: This refers to locking events and investigations."
+    hint: "Hint: Refers to lock trails and investigations."
   },
   {
-    question: "What is the most critical action upon detecting suspicious activity?",
-    answers: [
-      { text: "Rollback access to secure account status.", correct: true },
-      { text: "Close the account immediately.", correct: false },
-      { text: "Notify external parties.", correct: false }
-    ],
-    hint: "Hint: Rollbacks are effective during early detections."
-  },
-  {
-    question: "A flagged IP connected multiple accounts. What should you do?",
-    answers: [
-      { text: "Rollback activity linked to the flagged IP.", correct: true },
-      { text: "Ignore it if no improper access occurred.", correct: false },
-      { text: "Inform engineering immediately.", correct: false }
-    ]
-  },
-  {
-    question: "Where is the ATO Lock queue located in your system?",
+    question: "Where is the ATO Lock queue located?",
     answers: [
       { text: "CF1.", correct: false },
       { text: "Notary.", correct: true },
-      { text: "Engineering repository.", correct: false }
+      { text: "Engineering Lock Queue.", correct: false }
     ],
-    hint: "Hint: Remember system definitions in training!"
+    hint: "Hint: Think about common internal tools."
   },
   {
-    question: "Scenario: Fraud models identify login change patterns. React?",
+    question: "A flagged IP connects multiple accounts. What action to take?",
     answers: [
-      { text: "Rollback flagged account activity quickly.", correct: true },
-      { text: "Leave suspected behavior uninvestigated.", correct: false },
-      { text: "Allow dynamic next-login scenarios.", correct: false }
-    ]
+      { text: "Rollback activity linked to the flagged IP.", correct: true },
+      { text: "Ignore and wait unless improper access arises.", correct: false },
+      { text: "Inform 3rd-tier engineering directly.", correct: false }
+    ],
+    hint: "Hint: Rolling back activities secures the account immediately."
   },
-  {
-    question: "Bulk queued events indicate inauthentic grouping, first decision?",
-    answers: [
-      { text: "Data-review flagged outputs for patterns.", correct: true },
-      { text: "Ignore single smaller bulk triggers for ease.", correct: false },
-      { text: "Wait before comparative enters unset schedule factors.", correct: false }
-    ]
-  }
+  // Add remaining 9 questions...
 ];
 
 // Game Variables
-const QUESTIONS = levels.length;
-let score, progress, quizTimer;
-let timePerQuestion = 15, hints = {}; timerRunning =True
+let score = 0;
+let currentQuestionIndex = 0;
+let timer;
+const totalTime = 15; // Total time per question (seconds)
+
+// DOM Elements
+const welcomeScreen = document.getElementById("welcome-screen");
+const quizScreen = document.getElementById("quiz-screen");
+const resultScreen = document.getElementById("result-screen");
+const questionElement = document.getElementById("question");
+const answersContainer = document.getElementById("answers");
+const progressBar = document.getElementById("progress-bar");
+const hintButton = document.getElementById("hint-btn");
+const certificateBtn = document.getElementById("certificate-btn");
+const timerElement = document.getElementById("timer");
+const finalScoreElement = document.getElementById("final-score");
+
+// Start Game
+document
+  .getElementById("start-game")
+  .addEventListener("click", () => startGame());
+
+function startGame() {
+  welcomeScreen.classList.add("hidden");
+  quizScreen.classList.remove("hidden");
+  score = 0;
+  currentQuestionIndex = 0;
+  loadQuestion();
+}
+
+// Load Question
+function loadQuestion() {
+  const currentQuestion = levels[currentQuestionIndex];
+
+  questionElement.textContent = currentQuestion.question;
+  answersContainer.innerHTML = ""; // Reset answers
+  currentQuestion.answers.forEach((answer) => {
+    const button = document.createElement("button");
+    button.textContent = answer.text;
+    button.onclick = () => handleAnswer(answer.correct);
+    answersContainer.appendChild(button);
+  });
+
+  // Hint Setup
+  if (currentQuestion.hint) {
+    hintButton.classList.remove("hidden");
+    hintButton.onclick = () => showHint(currentQuestion.hint);
+  } else {
+    hintButton.classList.add("hidden");
+  }
+
+  startTimer();
+  updateProgressBar();
+}
+
+// Handle Answer
+function handleAnswer(isCorrect) {
+  clearInterval(timer); // Stop timer
+  if (isCorrect) {
+    score += 10; // Add score
+    triggerConfetti(); // Show confetti!
+  } else {
+    score -= 3; // Deduct score
+  }
+
+  currentQuestionIndex += 1;
+  if (currentQuestionIndex < levels.length) {
+    setTimeout(loadQuestion, 1000); // Load next question
+  } else {
+    endGame();
+  }
+}
+
+// Timer Logic
+function startTimer() {
+  let timeLeft = totalTime;
+  timerElement.textContent = `Time Left: ${timeLeft}s`;
+  timer = setInterval(() => {
+    timeLeft -= 1;
+    timerElement.textContent = `Time Left: ${timeLeft}s`;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      handleAnswer(false); // Automatically mark unanswered as incorrect
+    }
+  }, 1000);
+}
+
+// Progress Bar Update
+function updateProgressBar() {
+  const progress = ((currentQuestionIndex + 1) / levels.length) * 100;
+  progressBar.style.width = `${progress}%`;
+}
+
+// Show Hint
+function showHint(hint) {
+  hintText.textContent = hint;
+}
+
+// End Game
+function endGame() {
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.remove("hidden");
+  finalScoreElement.textContent = `${score}`;
+
+  if (score >= 70) {
+    certificateBtn.classList.remove("hidden");
+  } else {
+    certificateBtn.classList.add("hidden");
+  }
+}
+
+// Confetti Functionality
+function triggerConfetti() {
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.7 },
+  });
+}
+
+// Certificate Download
+certificateBtn.addEventListener("click", () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text("Certificate of Completion", 20, 30);
+  doc.text(`Congratulations!`, 20, 50);
+  doc.text(`You scored ${score} points out of ${levels.length * 10}.`, 20, 70);
+  doc.save("Certificate.pdf");
+});
+
+// Restart Game
+document
+  .getElementById("restart-btn")
+  .addEventListener("click", () => location.reload());
