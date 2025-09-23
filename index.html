@@ -20,25 +20,23 @@
       <button id="start-btn">Start Game</button>
     </div>
 
-    <!-- Quiz Game Screen -->
+    <!-- Quiz Level Screen -->
     <div id="quiz-level" class="hidden">
-      <h2 id="question">Loading question...</h2>
+      <h2 id="question">Loading Question...</h2>
       <div class="options">
-        <!-- Dynamic options will be added here -->
+        <!-- Buttons for answer options will be dynamically added here -->
       </div>
-      <!-- Feedback section -->
       <div id="feedback"></div>
-      <button id="next-question" class="hidden" onclick="showNextQuestion()">Next Question</button>
+      <button id="next-question" class="hidden">Next Question</button>
     </div>
 
     <!-- End Screen -->
     <div id="end-screen" class="hidden">
-      <h2>Great Job! 🎉</h2>
-      <p>You completed the game! Your final score is: <span id="score"></span></p>
+      <h2>Congratulations! 🎉</h2>
+      <p>You completed all levels! Your total score is: <span id="score"></span></p>
       <button onclick="restartGame()">Play Again</button>
     </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
