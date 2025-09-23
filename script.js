@@ -1,114 +1,114 @@
+// Questions Array (14 Questions)
 const levels = [
   {
     question: "What is an account takeover (ATO)?",
     answers: [
-      { text: "Gaining unauthorized access to a user’s account", correct: true },
-      { text: "Creating multiple accounts for testing", correct: false },
-      { text: "Locking accounts after password attempts", correct: false }
+      { text: "Legitimate customer login", correct: false },
+      { text: "Malicious actor gains access", correct: true },
+      { text: "Testing multiple logins", correct: false }
     ],
-    hint: "Think about unauthorized actions on legitimate accounts."
+    hint: "Hint: Think of unauthorized access to an account."
   },
   {
-    question: "What is the first step in responding to a detected ATO?",
+    question: "Which is a red flag for phishing?",
     answers: [
-      { text: "Rollback the user's account to a safe state", correct: true },
-      { text: "Lock the account immediately", correct: false },
-      { text: "Notify the affected user", correct: false }
+      { text: "Generic salutations like 'Dear Customer'", correct: true },
+      { text: "Proper domain names", correct: false },
+      { text: "Legit-looking links", correct: false }
     ],
-    hint: "Consider company policy on 'rollback' vs. 'lock'."
+    hint: "Hint: Phishing emails use generic intros to gain trust."
   },
-  // Add more levels as needed...
+  // Add 12 more questions...
 ];
 
-let currentLevel = 0;
-let score = 0;
-let timer;
-const maxTime = 20;
-
-const questionScreen = document.getElementById("question-screen");
+// DOM Elements
 const welcomeScreen = document.getElementById("welcome-screen");
+const quizScreen = document.getElementById("quiz-screen");
 const resultScreen = document.getElementById("result-screen");
-const startButton = document.getElementById("start-game");
-const restartButton = document.getElementById("restart-game");
-const questionTitle = document.getElementById("question-title");
+const questionElement = document.getElementById("question");
 const answersContainer = document.getElementById("answers");
-const hintText = document.getElementById("hint-text");
-const hintButton = document.getElementById("hint-button");
 const timerElement = document.getElementById("timer");
 const progressBar = document.getElementById("progress-bar");
-const finalScore = document.getElementById("final-score");
-const downloadCertificateButton = document.getElementById("download-certificate");
+const finalScoreElement = document.getElementById("final-score");
+const hintText = document.getElementById("hint-text");
+const hintButton = document.getElementById("hint-btn");
 
-// Event Listeners
-startButton.addEventListener("click", startGame);
-restartButton.addEventListener("click", () => {
-  location.reload();
-});
-hintButton.addEventListener("click", showHint);
-downloadCertificateButton.addEventListener("click", generateCertificate);
+let score = 0;
+let currentLevel = 0;
+let timer;
+const maxScore = 140; // 14 questions * 10 points
+const timePerQuestion = 15;
 
-function startGame() {
-  welcomeScreen.style.display = "none";
-  questionScreen.style.display = "block";
-  score = 0;
+// Start Game
+document.getElementById("start-btn").addEventListener("click", () => {
+  welcomeScreen.classList.add("hidden");
+  quizScreen.classList.remove("hidden");
   currentLevel = 0;
-  showQuestion();
-}
+  score = 0;
+  displayNextQuestion();
+});
 
-function showQuestion() {
-  const level = levels[currentLevel];
-  questionTitle.textContent = level.question;
+// Display Next Question
+function displayNextQuestion() {
+  if (currentLevel >= levels.length) {
+    endGame();
+    return;
+  }
+
+  const currentQuestion = levels[currentLevel];
+  questionElement.textContent = currentQuestion.question;
+
   answersContainer.innerHTML = "";
-  hintText.textContent = "";
-
-  level.answers.forEach((answer, index) => {
+  currentQuestion.answers.forEach(answer => {
     const button = document.createElement("button");
     button.textContent = answer.text;
     button.onclick = () => handleAnswer(answer.correct);
     answersContainer.appendChild(button);
   });
 
+  hintText.textContent = ""; // Clear hint text
+  if (currentQuestion.hint) {
+    hintButton.classList.remove("hidden");
+    hintButton.onclick = () => (hintText.textContent = currentQuestion.hint);
+  } else {
+    hintButton.classList.add("hidden");
+  }
+
+  updateProgressBar();
   startTimer();
 }
 
-function handleAnswer(correct) {
-  if (correct) {
+// Handle Answer
+function handleAnswer(isCorrect) {
+  if (isCorrect) {
     score += 10;
-    displayConfetti();
-  }
-  currentLevel++;
-  updateProgressBar();
-
-  if (currentLevel < levels.length) {
-    showQuestion();
+    triggerConfetti();
   } else {
-    endGame();
+    score -= 3;
   }
+  clearInterval(timer); // Clear timer
+  currentLevel++;
+  setTimeout(displayNextQuestion, 1000);
 }
 
+// Start Timer
 function startTimer() {
-  let timeLeft = maxTime;
-  timerElement.textContent = `Time Remaining: ${timeLeft}`;
+  let timeLeft = timePerQuestion;
+  timerElement.textContent = `Time Left: ${timeLeft}s`;
   clearInterval(timer);
   timer = setInterval(() => {
     timeLeft--;
-    timerElement.textContent = `Time Remaining: ${timeLeft}`;
+    timerElement.textContent = `Time Left: ${timeLeft}s`;
     if (timeLeft <= 0) {
       clearInterval(timer);
-      handleAnswer(false);
+      currentLevel++;
+      displayNextQuestion();
     }
   }, 1000);
 }
 
-function showHint() {
-  hintText.textContent = levels[currentLevel].hint;
-}
-
-function updateProgressBar() {
-  progressBar.style.width = `${(currentLevel / levels.length) * 100}%`;
-}
-
-function displayConfetti() {
+// Trigger Confetti
+function triggerConfetti() {
   confetti({
     particleCount: 100,
     spread: 70,
@@ -116,18 +116,30 @@ function displayConfetti() {
   });
 }
 
-function endGame() {
-  questionScreen.style.display = "none";
-  resultScreen.style.display = "block";
-  clearInterval(timer);
-  finalScore.textContent = `Your Score: ${score}`;
-  downloadCertificateButton.style.display = score >= 70 ? "block" : "none";
+// Update Progress Bar
+function updateProgressBar() {
+  const progress = (currentLevel / levels.length) * 100;
+  progressBar.style.width = `${progress}%`;
 }
 
+// End Game
+function endGame() {
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.remove("hidden");
+  finalScoreElement.textContent = `${score}`;
+  if (score >= 70) {
+    document.getElementById("certificate-btn").classList.remove("hidden");
+  } else {
+    document.getElementById("certificate-btn").classList.add("hidden");
+  }
+}
+
+// Generate Certificate
 function generateCertificate() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   doc.text("Certificate of Completion", 20, 30);
-  doc.text(`Congrats! You scored ${score}`, 20, 50);
-  doc.save("certificate.pdf");
+  doc.text(`Final Score: ${score}/140`, 20, 50);
+  doc.text("Well Done!", 20, 70);
+  doc.save("ATO_Certificate.pdf");
 }
