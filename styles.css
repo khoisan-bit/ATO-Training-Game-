@@ -32,28 +32,6 @@ body {
   transition: width 0.5s ease-in-out;
 }
 
-/* Pathway Graphics */
-.pathway {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px auto;
-  max-width: 600px;
-  padding: 10px 0;
-}
-
-.checkpoint {
-  width: 30px;
-  height: 30px;
-  background-color: #ddd;
-  border-radius: 50%;
-  transition: background-color 0.3s ease-in-out, transform 0.3s;
-}
-
-.checkpoint.active {
-  background-color: #007bff;
-  transform: scale(1.2);
-}
-
 /* Score Tracker */
 #score-tracker {
   font-size: 16px;
