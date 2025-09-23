@@ -25,22 +25,6 @@ body {
   display: none;
 }
 
-#progress-container {
-  width: 100%;
-  background: #ddd;
-  height: 20px;
-  margin: 15px 0;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-#progress-bar {
-  height: 100%;
-  width: 0%;
-  background: #4caf50;
-  transition: width 0.5s;
-}
-
 button {
   padding: 10px 15px;
   font-size: 16px;
@@ -51,35 +35,29 @@ button {
   margin: 10px 0;
   cursor: pointer;
 }
-
 button:hover {
   background: #0056b3;
 }
 
-#answers button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
-#result-screen {
+#progress-wrapper {
+  background-color: #ddd;
+  height: 20px;
+  border-radius: 10px;
   margin-top: 20px;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #4caf50;
+  border-radius: 10px;
+  transition: width 0.5s;
 }
 
 #hint-text {
   font-style: italic;
-  margin: 10px 0;
-  color: #777;
+  color: #666;
+  margin-top: 15px;
 }
 
 #timer {
@@ -90,6 +68,7 @@ button:hover {
 #certificate-btn {
   background: #28a745;
 }
+
 #certificate-btn:hover {
   background: #1c7430;
 }
