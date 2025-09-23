@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Defend the Fort: Stop ATO</title>
+  <title>Defend the Fort</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,6 +11,19 @@
     <!-- Progress Bar -->
     <div class="progress-container">
       <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- Pathway Progress -->
+    <div class="pathway">
+      <div class="checkpoint" id="checkpoint-1"></div>
+      <div class="checkpoint" id="checkpoint-2"></div>
+      <div class="checkpoint" id="checkpoint-3"></div>
+      <div class="checkpoint" id="checkpoint-4"></div>
+      <div class="checkpoint" id="checkpoint-5"></div>
+      <div class="checkpoint" id="checkpoint-6"></div>
+      <div class="checkpoint" id="checkpoint-7"></div>
+      <div class="checkpoint" id="checkpoint-8"></div>
+      <div class="checkpoint" id="checkpoint-9"></div>
     </div>
 
     <!-- Score Tracker -->
@@ -27,7 +40,7 @@
     <div id="quiz-level" class="hidden">
       <h2 id="question">Loading Question...</h2>
       <div class="options">
-        <!-- Buttons for answer options will be dynamically added here -->
+        <!-- Options will dynamically populate here -->
       </div>
       <div id="feedback"></div>
       <button id="next-question" class="hidden">Next Question</button>
@@ -35,14 +48,17 @@
 
     <!-- End Screen -->
     <div id="end-screen" class="hidden">
-      <h2>Congratulations! 🎉</h2>
-      <p>You completed all levels! Your total score is: <span id="score"></span></p>
+      <h2>Game Complete! 🎉</h2>
+      <p>Your total score: <span id="score"></span></p>
+      <div id="certificate-section" class="hidden">
+        <button id="certificate-btn" onclick="generateCertificate()">Download Certificate</button>
+      </div>
       <button onclick="restartGame()">Play Again</button>
     </div>
   </div>
 
-  <!-- Confetti Library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Include jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
