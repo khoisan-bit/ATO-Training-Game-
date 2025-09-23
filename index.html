@@ -12,7 +12,7 @@
     <div id="welcome-screen">
       <h1>Welcome to the ATO Training Game</h1>
       <p>Test your ability to identify and handle account takeovers.</p>
-      <button id="start-btn">Start Game</button>
+      <button id="start-game">Start Game</button>
     </div>
 
     <!-- Quiz Screen -->
@@ -23,6 +23,7 @@
       <h2 id="question"></h2>
       <div id="answers"></div>
       <div id="footer">
+        <p id="score-tracker">Score: 0</p>
         <p id="timer">Time Left: 15s</p>
         <button id="hint-btn" class="hidden">Get Hint</button>
         <p id="hint-text" class="hint-text"></p>
@@ -33,16 +34,14 @@
     <div id="result-screen" class="hidden">
       <h1>Congratulations!</h1>
       <p>Your final score is: <span id="final-score"></span>/140</p>
-      <button id="certificate-btn" onclick="generateCertificate()">Download Certificate</button>
+      <button id="certificate-btn">Download Certificate</button>
       <button id="restart-btn">Restart Game</button>
     </div>
   </div>
 
-  <!-- Confetti Library -->
+  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- PDF Generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-  <!-- Game Script -->
   <script src="script.js"></script>
 </body>
 </html>
