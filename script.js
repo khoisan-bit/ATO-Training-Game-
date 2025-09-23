@@ -1,5 +1,5 @@
 // Game Variables
-let score = 0; // Player's score
+let score = 0; // Stores the score
 let currentLevel = 0; // Tracks the current level
 
 // Define the levels
@@ -78,95 +78,77 @@ const levels = [
   }
 ];
 
-// Event Listeners
+// Start Game Button Event
 document.getElementById('start-btn').addEventListener('click', startGame);
 
-// Function to Start the Game
+// Start Game Function
 function startGame() {
-  currentLevel = 0; // Reset to the first level
-  score = 0; // Reset score
-  showLevel(); // Show the first level
+  score = 0;
+  currentLevel = 0;
+  showLevel();
 }
 
-// Function to Display the Current Level
+// Show Current Level Function
 function showLevel() {
-  // Hide the welcome screen and show the quiz screen
   document.getElementById('welcome-screen').classList.add('hidden');
   document.getElementById('quiz-level').classList.remove('hidden');
 
-  // Get the current level data
   const level = levels[currentLevel];
-  const questionElement = document.getElementById('question');
-  const optionsElement = document.querySelector('.options');
-  const feedbackElement = document.getElementById('feedback'); // Get feedback element
+  document.getElementById('question').textContent = level.question;
 
-  // Update the question text
-  questionElement.textContent = level.question;
+  const optionsContainer = document.querySelector('.options');
+  optionsContainer.innerHTML = "";
 
-  // Clear old feedback and options
-  feedbackElement.textContent = ""; // Reset feedback
-  optionsElement.innerHTML = ""; // Clear options
-
-  // Create option buttons
   level.options.forEach(option => {
     const button = document.createElement('button');
-    button.textContent = option.text; // Add text to button
-    button.classList.add('option'); // Add styling class
-    button.addEventListener('click', () => handleAnswer(option.isCorrect)); // Add click event
-    optionsElement.appendChild(button); // Append button to options container
+    button.textContent = option.text;
+    button.classList.add('option');
+    button.addEventListener('click', () => handleAnswer(option.isCorrect));
+    optionsContainer.appendChild(button);
   });
 
-  // Update the progress bar
-  const progress = ((currentLevel + 1) / levels.length) * 100; // Calculate percentage
-  const progressBar = document.getElementById('progress-bar');
-  progressBar.style.width = `${progress}%`; // Update the width
+  document.getElementById('feedback').textContent = "";
+  updateProgressBar();
 }
 
-// Function to Handle Answer Selection
 function handleAnswer(isCorrect) {
+  const feedback = document.getElementById('feedback');
   const nextButton = document.getElementById('next-question');
-  const feedbackElement = document.getElementById('feedback'); // Get feedback element
 
-  // Show feedback and update score
   if (isCorrect) {
-    score += 10; // Add points for correct answer
-    feedbackElement.textContent = "Correct! Great job!"; // Correct feedback
-    feedbackElement.style.color = "green"; // Green for correct
+    feedback.textContent = "Correct! Great job!";
+    feedback.style.color = "green";
+    score += 10;
   } else {
-    feedbackElement.textContent = "Incorrect. Try again!"; // Incorrect feedback
-    feedbackElement.style.color = "red"; // Red for incorrect
+    feedback.textContent = "Incorrect. Try again!";
+    feedback.style.color = "red";
   }
 
-  // Show the "Next Question" button to move forward
   nextButton.classList.remove('hidden');
 }
 
-// Function to Show the Next Level
-function showNextQuestion() {
-  currentLevel++; // Proceed to the next level
-
-  // Check if there are more levels or if the game is over
+document.getElementById('next-question').addEventListener('click', () => {
+  currentLevel++;
   if (currentLevel < levels.length) {
-    showLevel(); // Show the next level
-    document.getElementById('next-question').classList.add('hidden'); // Hide the "Next" button
+    showLevel();
+    document.getElementById('next-question').classList.add('hidden');
   } else {
-    finishGame(); // End the game
+    finishGame();
   }
+});
+
+function updateProgressBar() {
+  const progress = ((currentLevel + 1) / levels.length) * 100;
+  document.getElementById('progress-bar').style.width = `${progress}%`;
 }
 
-// Function to Finish the Game
 function finishGame() {
-  // Hide the quiz screen and show the end screen
   document.getElementById('quiz-level').classList.add('hidden');
   document.getElementById('end-screen').classList.remove('hidden');
-
-  // Show the player's final score
   document.getElementById('score').textContent = score;
 }
 
-// Function to Restart the Game
 function restartGame() {
-  // Reset everything and go back to the welcome screen
   document.getElementById('end-screen').classList.add('hidden');
   document.getElementById('welcome-screen').classList.remove('hidden');
 }
