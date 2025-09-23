@@ -33,8 +33,7 @@ body {
 }
 
 /* Welcome Graphic */
-.welcome-graphic,
-.certificate-graphic {
+.welcome-graphic, .certificate-graphic {
   width: 200px;
   height: auto;
   margin: 20px auto;
