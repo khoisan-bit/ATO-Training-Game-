@@ -18,23 +18,30 @@
 
     <!-- Welcome Screen -->
     <div id="welcome-screen">
+      <!-- Cash QR Code Graphic -->
+      <img src="https://cash.app/qr/click/7k8xwvgg?margin=0&logoColor=00e013&bg=000000&fg=FFFFFF&format=svg" alt="Cash App Logo" class="welcome-graphic">
       <h1>Defend the Fort</h1>
       <p>Think you can stop account takeovers? Test your fraud detection skills!</p>
+      <input id="player-name" type="text" placeholder="Enter your name" class="name-input">
       <button id="start-btn">Start Game</button>
     </div>
 
     <!-- Quiz Level Screen -->
     <div id="quiz-level" class="hidden">
       <h2 id="question">Loading Question...</h2>
+      <div id="timer" class="timer">Time Left: 15s</div>
       <div class="options">
         <!-- Options will dynamically populate here -->
       </div>
       <div id="feedback"></div>
+      <button id="hint-btn" class="hidden">Get Hint</button>
       <button id="next-question" class="hidden">Next Question</button>
     </div>
 
     <!-- End Screen -->
     <div id="end-screen" class="hidden">
+      <!-- Cash QR Code on the Certificate -->
+      <img src="https://cash.app/qr/click/7k8xwvgg?margin=0&logoColor=00e013&bg=000000&fg=FFFFFF&format=svg" alt="Cash App Logo" class="certificate-graphic">
       <h2>Game Complete! 🎉</h2>
       <p>Your total score: <span id="score"></span></p>
       <div id="certificate-section" class="hidden">
