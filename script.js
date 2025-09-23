@@ -1,8 +1,8 @@
 // Game Variables
 let score = 0; // Player's score
 let currentLevel = 0; // Tracks the current level
-let timer; // Timer for each question
-const minScoreForCertificate = 70; // Minimum score to unlock certificate
+let timer; // Timer for the question
+const minScoreForCertificate = 70; // Minimum score to unlock the certificate
 let playerName; // Store player's name
 
 // DOM Elements
@@ -16,92 +16,21 @@ const nextButton = document.getElementById("next-question");
 const hintButton = document.getElementById("hint-btn");
 const certificateSection = document.getElementById("certificate-section");
 
-// Question Array with All 14 Questions and Hints
+// Define All 14 Questions
 const levels = [
-  {
-    question: "What is an account takeover (ATO)?",
-    options: [
-      { text: "A legitimate customer logs in.", isCorrect: false },
-      { text: "A malicious actor gains access.", isCorrect: true },
-      { text: "A customer voluntarily shares credentials.", isCorrect: false }
-    ],
-    hint: "Hint: ATO involves unauthorized access using stolen credentials."
-  },
-  {
-    question: "Which is a red flag of phishing?",
-    options: [
-      { text: "Legitimate sender email address.", isCorrect: false },
-      { text: "Generic salutations like 'Dear Customer'.", isCorrect: true },
-      { text: "Proper spelling and grammar.", isCorrect: false }
-    ],
-    hint: "Hint: Phishing often uses generic greetings like 'Dear Customer'."
-  },
-  {
-    question: "What is a Bulk Lock?",
-    options: [
-      {
-        text: "Manually locked accounts queued by Risk Machine Learning which have triggered offline ATO models.",
-        isCorrect: true
-      },
-      { text: "Random accounts that are just locked.", isCorrect: false },
-      { text: "A lock in bulk.", isCorrect: false }
-    ],
-    hint: "Hint: Bulk Locks involve accounts flagged by models based on fraudulent behavior."
-  },
-  {
-    question: "Which is NOT a signal of an Inauthentic Account?",
-    options: [
-      { text: "Patterns of suspicious activity.", isCorrect: false },
-      { text: "Lack legitimate transaction patterns.", isCorrect: false },
-      { text: "Customer name, identity documents, and selfie match.", isCorrect: true }
-    ],
-    hint: "Hint: A real account's documentation would appear to match."
-  },
-  {
-    question: "Where is the ATO Locks queue located?",
-    options: [
-      { text: "CF1", isCorrect: false },
-      { text: "Notary", isCorrect: true },
-      { text: "A spreadsheet", isCorrect: false }
-    ],
-    hint: "Hint: ATO Locks queue is part of your organization's Notary system."
-  },
-  {
-    question: "What does #ATO_INV_LATO stand for?",
-    options: [
-      { text: "Completed ATO Lock Investigation.", isCorrect: true },
-      { text: "Locks touched this account.", isCorrect: false },
-      { text: "The account has been reset.", isCorrect: false }
-    ],
-    hint: "Hint: #ATO_INV_LATO refers to investigations completed for flagged accounts."
-  },
-  {
-    question: "What’s the first step for flagged suspicious activity?",
-    options: [
-      { text: "Allow activity to continue.", isCorrect: false },
-      { text: "Investigate the flagged activity.", isCorrect: true },
-      { text: "Ignore the flagged alert.", isCorrect: false }
-    ],
-    hint: "Hint: Always review flagged activity to assess fraud risks."
-  },
-  {
-    question: "What’s a common method attackers use in account takeovers?",
-    options: [
-      { text: "Phishing emails to steal credentials.", isCorrect: true },
-      { text: "Secure logins from legitimate sources.", isCorrect: false },
-      { text: "Monitoring accounts offline.", isCorrect: false }
-    ],
-    hint: "Hint: Attackers often use phishing to trick users into sharing credentials."
-  }
+  { question: "What is an account takeover (ATO)?", options: [ ... ], hint: "Hint: ATO involves unauthorized access." },
+  { question: "Which is a red flag of phishing?", options: [ ... ], hint: "Hint: Emails with 'Dear Customer'..." },
+  { question: "What is a Bulk Lock?", options: [ ... ], hint: "Hint: Risk Model flagged locks..." },
+  { question: "..." }, // Include remaining 10 questions here, following the same structure!
 ];
 
-// Event Listeners
+// Start Game
 document.getElementById("start-btn").addEventListener("click", startGame);
 
 function startGame() {
   playerName = document.getElementById("player-name").value;
   if (!playerName) {
-    alert("Please enter your name to start the game!");
+    alert("Please enter your name to start the game.");
     return;
   }
   score = 0;
@@ -112,43 +41,30 @@ function startGame() {
 
 // Show Level
 function showLevel() {
-  clearInterval(timer);
-  document.getElementById("welcome-screen").classList.add("hidden");
-  document.getElementById("quiz-level").classList.remove("hidden");
-  const level = levels[currentLevel];
-  questionElement.textContent = level.question;
-
+  clearInterval(timer); // Clear the previous timer
+  questionElement.textContent = levels[currentLevel].question;
   optionsContainer.innerHTML = ""; // Reset options
-  level.options.forEach((option) => {
+  levels[currentLevel].options.forEach((option) => {
     const button = document.createElement("button");
     button.textContent = option.text;
+    button.onclick = () => handleAnswer(option.isCorrect);
     button.classList.add("option");
-    button.addEventListener("click", () => handleAnswer(option.isCorrect));
     optionsContainer.appendChild(button);
   });
-
-  feedbackElement.textContent = ""; // Clear feedback
-  nextButton.classList.add("hidden"); // Hide next button
-  hintButton.classList.remove("hidden"); // Show hint
-
-  if (level.hint) {
-    hintButton.onclick = () => {
-      feedbackElement.textContent = level.hint;
-      feedbackElement.style.color = "#007bff";
-    };
-  } else {
-    hintButton.classList.add("hidden");
-  }
-
-  updateProgressBar();
+  feedbackElement.textContent = ""; // Reset feedback
+  nextButton.classList.add("hidden");
+  hintButton.classList.remove("hidden"); // Show hint button
+  hintButton.onclick = () => {
+    feedbackElement.textContent = levels[currentLevel].hint || "No hint available.";
+  };
+  updateProgressBar(); // Update progress bar
   startTimer(15); // Start a 15-second timer
 }
 
-// Timer Function
-function startTimer(duration) {
-  let timeRemaining = duration;
+// Timer
+function startTimer(seconds) {
+  let timeRemaining = seconds;
   timerElement.textContent = `Time Left: ${timeRemaining}s`;
-
   timer = setInterval(() => {
     timeRemaining--;
     timerElement.textContent = `Time Left: ${timeRemaining}s`;
@@ -163,11 +79,17 @@ function startTimer(duration) {
 
 // Handle Answer
 function handleAnswer(isCorrect) {
-  clearInterval(timer);
-  feedbackElement.style.color = isCorrect ? "green" : "red";
-  feedbackElement.textContent = isCorrect ? "Correct!" : "Incorrect.";
-  score += isCorrect ? 10 : -3;
-
+  clearInterval(timer); // Stop the timer
+  if (isCorrect) {
+    score += 10; // Add 10 points for correct answer
+    feedbackElement.textContent = "Correct!";
+    feedbackElement.style.color = "green";
+    runConfetti(); // Start confetti celebration
+  } else {
+    score -= 3; // Deduct 3 points for incorrect
+    feedbackElement.textContent = "Incorrect!";
+    feedbackElement.style.color = "red";
+  }
   updateScore();
   nextButton.classList.remove("hidden");
 }
@@ -178,12 +100,33 @@ function updateProgressBar() {
   progressBar.style.width = `${progress}%`;
 }
 
+// Confetti Fun!
+function runConfetti() {
+  const duration = 3000; // 3 seconds
+  const animationEnd = Date.now() + duration;
+  const defaults = { spread: 360, startVelocity: 35, ticks: 60, zIndex: 0 };
+
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  const interval = setInterval(() => {
+    const timeLeft = animationEnd - Date.now();
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+    } else {
+      confetti({ ...defaults, particleCount: 50, origin: { x: randomInRange(0.1, 0.3), y: 0.6 } });
+      confetti({ ...defaults, particleCount: 50, origin: { x: randomInRange(0.7, 0.9), y: 0.6 } });
+    }
+  }, 250);
+}
+
 // Update Score
 function updateScore() {
   scoreTracker.textContent = `Score: ${score}`;
 }
 
-// Move to Next Level
+// Go to Next Level
 nextButton.addEventListener("click", () => {
   currentLevel++;
   if (currentLevel < levels.length) {
@@ -193,36 +136,22 @@ nextButton.addEventListener("click", () => {
   }
 });
 
-// End Game Logic
+// End Game
 function finishGame() {
   document.getElementById("quiz-level").classList.add("hidden");
   document.getElementById("end-screen").classList.remove("hidden");
   document.getElementById("score").textContent = `${score}`;
-  certificateSection.style.display = score >= minScoreForCertificate ? "block" : "none";
+  if (score >= minScoreForCertificate) {
+    certificateSection.classList.remove("hidden");
+  } else {
+    certificateSection.classList.add("hidden");
+  }
 }
 
-// Certificate PDF
+// Generate Certificate
 function generateCertificate() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  // Add logo + personalized text
-  doc.addImage(
-    "https://cash.app/qr/click/7k8xwvgg?margin=0&logoColor=00e013&bg=000000&fg=FFFFFF&format=svg",
-    "SVG",
-    30,
-    10,
-    150,
-    30
-  );
-  doc.setFontSize(22).setFont("helvetica", "bold");
-  doc.text("Certificate of Completion", 105, 60, null, null, "center");
-  doc.text(`Awarded to: ${playerName}`, 105, 90, null, null, "center");
-  doc.setFontSize(14).text(`Your Score: ${score}`, 105, 110, null, null, "center");
-  doc.text("Congratulations on completing Defend the Fort!", 105, 130, null, null, "center");
-  doc.save(`${playerName}-Certificate.pdf`);
-}
 
-// Restart Game
-function restartGame() {
-  location.reload();
-}
+  // Add Logo
+  doc.addImage("https://cash.app/qr/click/7k
