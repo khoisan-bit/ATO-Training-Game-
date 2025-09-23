@@ -1,82 +1,7 @@
 // Game Variables
 let score = 0; // Player's score
 let currentLevel = 0; // Tracks the current level
-
-// Define the levels
-const levels = [
-  {
-    question: "What is an account takeover (ATO)?",
-    options: [
-      { text: "A legitimate customer logs in to their account.", isCorrect: false },
-      { text: "A malicious actor gains access to an account.", isCorrect: true },
-      { text: "A customer voluntarily shares their credentials.", isCorrect: false }
-    ]
-  },
-  {
-    question: "What’s the first action to take for suspicious activity?",
-    options: [
-      { text: "Allow the activity to continue.", isCorrect: false },
-      { text: "Block the account for further investigation.", isCorrect: true },
-      { text: "Notify the user before taking action.", isCorrect: false }
-    ]
-  },
-  {
-    question: "What’s a common method attackers use in account takeovers?",
-    options: [
-      { text: "Phishing emails to steal credentials.", isCorrect: true },
-      { text: "Regular account activity.", isCorrect: false },
-      { text: "Browsing the internet anonymously.", isCorrect: false }
-    ]
-  },
-  {
-    question: "What is phishing?",
-    options: [
-      { text: "Stealing account details through fake emails.", isCorrect: true },
-      { text: "Browsing the web with security software.", isCorrect: false },
-      { text: "Copying files legally via cloud storage.", isCorrect: false }
-    ]
-  },
-  {
-    question: "Which of the following should be used as a password?",
-    options: [
-      { text: "Your mother's maiden name.", isCorrect: false },
-      { text: "A random string of letters, numbers, and special characters.", isCorrect: true },
-      { text: "A combination of your name and birthday.", isCorrect: false }
-    ]
-  },
-  {
-    question: "Which is a red flag of phishing?",
-    options: [
-      { text: "Legitimate sender email address.", isCorrect: false },
-      { text: "Generic salutations like 'Dear Customer'.", isCorrect: true },
-      { text: "Proper spelling and grammar.", isCorrect: false }
-    ]
-  },
-  {
-    question: "What is a Bulk Lock?",
-    options: [
-      { text: "Manually locked accounts queued by Risk Machine Learning which have triggered offline ATO models. These accounts are investigated the same as Account Locks but have different tools to determine the resolve.", isCorrect: true },
-      { text: "Random accounts that are just locked.", isCorrect: false },
-      { text: "A lock in bulk.", isCorrect: false }
-    ]
-  },
-  {
-    question: "Which is NOT a signal of an Inauthentic Account?",
-    options: [
-      { text: "Patterns of suspicious activity.", isCorrect: false },
-      { text: "Lack legitimate transaction patterns.", isCorrect: false },
-      { text: "Customer name, identity documents (driver's license), and selfie all match the customer.", isCorrect: true }
-    ]
-  },
-  {
-    question: "Where is the ATO Locks queue located?",
-    options: [
-      { text: "CF1.", isCorrect: false },
-      { text: "Notary.", isCorrect: true },
-      { text: "A spreadsheet.", isCorrect: false }
-    ]
-  }
-];
+const minScoreForCertificate = 70; // Minimum score to qualify for certificate
 
 // DOM Elements
 const scoreTracker = document.getElementById('score-tracker');
@@ -85,11 +10,33 @@ const progressBar = document.getElementById('progress-bar');
 const nextButton = document.getElementById('next-question');
 const optionsContainer = document.querySelector('.options');
 const questionElement = document.getElementById('question');
+const certificateSection = document.getElementById('certificate-section');
 
-// Start Game Button Event
+// Define levels
+const levels = [
+  // Example questions (you can add more here)
+  {
+    question: "What is an account takeover (ATO)?",
+    options: [
+      { text: "A legitimate customer logs in to their account.", isCorrect: false },
+      { text: "A malicious actor gains access to an account.", isCorrect: true },
+      { text: "A customer voluntarily shares credentials.", isCorrect: false }
+    ]
+  },
+  {
+    question: "Scenario: Fraud models flagged bulk accounts for suspicious logins. What do you do?",
+    options: [
+      { text: "Rollback suspicious activity.", isCorrect: true },
+      { text: "Wait for customers to notify of an issue.", isCorrect: false },
+      { text: "Ignore flagged data as incomplete.", isCorrect: false }
+    ]
+  },
+  // Add more levels as needed
+];
+
+// Start game
 document.getElementById('start-btn').addEventListener('click', startGame);
 
-// Start Game Function
 function startGame() {
   score = 0;
   currentLevel = 0;
@@ -97,7 +44,7 @@ function startGame() {
   showLevel();
 }
 
-// Show Current Level Function
+// Show current level
 function showLevel() {
   document.getElementById('welcome-screen').classList.add('hidden');
   document.getElementById('quiz-level').classList.remove('hidden');
@@ -106,7 +53,6 @@ function showLevel() {
   questionElement.textContent = level.question;
 
   optionsContainer.innerHTML = ""; // Clear old options
-  
   level.options.forEach(option => {
     const button = document.createElement('button');
     button.textContent = option.text;
@@ -115,76 +61,46 @@ function showLevel() {
     optionsContainer.appendChild(button);
   });
 
-  feedbackElement.textContent = ""; // Clear feedback text
+  feedbackElement.textContent = ""; // Clear feedback
   updateProgressBar();
 }
 
-// Handle Answer Selection
+// Handle answer
 function handleAnswer(isCorrect) {
   if (isCorrect) {
-    score += 10; // Add score for correct answer
-    updateScore();
-    runConfetti(); // Show confetti for correct answers
-    feedbackElement.textContent = "Correct! Well done!";
+    score += 10;
+    updateCheckpoint();
+    feedbackElement.textContent = "Correct!";
     feedbackElement.style.color = "green";
   } else {
-    score -= 3; // Deduct points for incorrect answer
-    updateScore();
-    feedbackElement.textContent = "Incorrect. Try again!";
+    score -= 3;
+    feedbackElement.textContent = "Incorrect.";
     feedbackElement.style.color = "red";
   }
+  updateScore();
   nextButton.classList.remove('hidden');
 }
 
-// Custom Confetti Function
-function runConfetti() {
-  const duration = 5 * 1000; // Confetti will last 5 seconds
-  const animationEnd = Date.now() + duration;
-  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-  function randomInRange(min, max) {
-    return Math.random() * (max - min) + min;
-  }
-
-  const interval = setInterval(function () {
-    const timeLeft = animationEnd - Date.now();
-
-    if (timeLeft <= 0) {
-      return clearInterval(interval);
-    }
-
-    const particleCount = 50 * (timeLeft / duration);
-    confetti({
-      ...defaults,
-      particleCount,
-      origin: {
-        x: randomInRange(0.1, 0.3),
-        y: Math.random() - 0.2,
-      },
-    });
-    confetti({
-      ...defaults,
-      particleCount,
-      origin: {
-        x: randomInRange(0.7, 0.9),
-        y: Math.random() - 0.2,
-      },
-    });
-  }, 250);
-}
-
-// Update Score Dynamically
-function updateScore() {
-  scoreTracker.textContent = `Score: ${score}`; // Update score tracker
-}
-
-// Update Progress Bar
+// Update progress bar
 function updateProgressBar() {
   const progress = ((currentLevel + 1) / levels.length) * 100;
   progressBar.style.width = `${progress}%`;
 }
 
-// Next Question Button Event
+// Update pathway checkpoints
+function updateCheckpoint() {
+  const checkpoint = document.getElementById(`checkpoint-${currentLevel + 1}`);
+  if (checkpoint) {
+    checkpoint.classList.add('active');
+  }
+}
+
+// Update score
+function updateScore() {
+  scoreTracker.textContent = `Score: ${score}`;
+}
+
+// Move to next question
 nextButton.addEventListener('click', () => {
   currentLevel++;
   if (currentLevel < levels.length) {
@@ -195,15 +111,49 @@ nextButton.addEventListener('click', () => {
   }
 });
 
-// Finish Game Function
+// Finish game
 function finishGame() {
   document.getElementById('quiz-level').classList.add('hidden');
   document.getElementById('end-screen').classList.remove('hidden');
-  document.getElementById('score').textContent = score; // Show final score
+  document.getElementById('score').textContent = `${score}`;
+
+  // Show certificate button if score is high enough
+  if (score >= minScoreForCertificate) {
+    certificateSection.classList.remove('hidden');
+  } else {
+    certificateSection.classList.add('hidden');
+  }
 }
 
-// Restart Game
+// Generate certificate
+function generateCertificate() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text("Certificate of Completion", 70, 50);
+  doc.setFont("normal");
+  doc.setFontSize(12);
+  doc.text(`Congratulations on completing the Defend the Fort game!`, 20, 70);
+  doc.text(`Your final score: ${score}`, 20, 90);
+
+  doc.save("Certificate_of_Completion.pdf");
+}
+
+// Restart game
 function restartGame() {
   document.getElementById('end-screen').classList.add('hidden');
   document.getElementById('welcome-screen').classList.remove('hidden');
+  score = 0;
+  currentLevel = 0;
+  updateProgressBar();
+  resetCheckpoints();
+}
+
+// Reset checkpoints
+function resetCheckpoints() {
+  Array.from(document.getElementsByClassName('checkpoint')).forEach(cp => {
+    cp.classList.remove('active');
+  });
 }
