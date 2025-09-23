@@ -44,8 +44,8 @@ const levels = [
       { text: "Inform 3rd-tier engineering directly.", correct: false }
     ],
     hint: "Hint: Rolling back activities secures the account immediately."
-  },
-  // Add remaining 9 questions...
+  }
+  // Add remaining questions here...
 ];
 
 // Game Variables
@@ -62,14 +62,13 @@ const questionElement = document.getElementById("question");
 const answersContainer = document.getElementById("answers");
 const progressBar = document.getElementById("progress-bar");
 const hintButton = document.getElementById("hint-btn");
+const hintText = document.getElementById("hint-text"); // ✅ FIX
 const certificateBtn = document.getElementById("certificate-btn");
 const timerElement = document.getElementById("timer");
 const finalScoreElement = document.getElementById("final-score");
 
 // Start Game
-document
-  .getElementById("start-game")
-  .addEventListener("click", () => startGame());
+document.getElementById("start-game").addEventListener("click", () => startGame());
 
 function startGame() {
   welcomeScreen.classList.add("hidden");
@@ -85,6 +84,8 @@ function loadQuestion() {
 
   questionElement.textContent = currentQuestion.question;
   answersContainer.innerHTML = ""; // Reset answers
+  hintText.textContent = ""; // Clear previous hint
+
   currentQuestion.answers.forEach((answer) => {
     const button = document.createElement("button");
     button.textContent = answer.text;
@@ -151,9 +152,9 @@ function showHint(hint) {
 function endGame() {
   quizScreen.classList.add("hidden");
   resultScreen.classList.remove("hidden");
-  finalScoreElement.textContent = `${score}`;
+  finalScoreElement.textContent = `${score} / ${levels.length * 10}`; // ✅ dynamic max score
 
-  if (score >= 70) {
+  if (score >= (levels.length * 10) * 0.7) { // ✅ 70% threshold
     certificateBtn.classList.remove("hidden");
   } else {
     certificateBtn.classList.add("hidden");
@@ -180,6 +181,4 @@ certificateBtn.addEventListener("click", () => {
 });
 
 // Restart Game
-document
-  .getElementById("restart-btn")
-  .addEventListener("click", () => location.reload());
+document.getElementById("restart-btn").addEventListener("click", () => location.reload());
