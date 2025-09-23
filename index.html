@@ -17,13 +17,12 @@
 
     <!-- Quiz Screen -->
     <div id="quiz-screen" class="hidden">
-      <div id="progress-container">
+      <div id="progress-wrapper">
         <div id="progress-bar"></div>
       </div>
       <h2 id="question"></h2>
       <div id="answers"></div>
       <div id="footer">
-        <p id="score-tracker">Score: 0</p>
         <p id="timer">Time Left: 15s</p>
         <button id="hint-btn" class="hidden">Get Hint</button>
         <p id="hint-text" class="hint-text"></p>
@@ -34,7 +33,7 @@
     <div id="result-screen" class="hidden">
       <h1>Congratulations!</h1>
       <p>Your final score is: <span id="final-score"></span>/140</p>
-      <button id="certificate-btn">Download Certificate</button>
+      <button id="certificate-btn" class="hidden">Download Certificate</button>
       <button id="restart-btn">Restart Game</button>
     </div>
   </div>
