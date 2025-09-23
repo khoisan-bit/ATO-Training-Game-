@@ -1,7 +1,7 @@
 // Game Variables
 let score = 0; // Player's score
 let currentLevel = 0; // Tracks the current level
-const minScoreForCertificate = 70; // Minimum score to unlock certificate
+const minScoreForCertificate = 70; // Minimum score to unlock the certificate
 
 // DOM Elements
 const scoreTracker = document.getElementById('score-tracker');
@@ -12,13 +12,13 @@ const questionElement = document.getElementById('question');
 const nextButton = document.getElementById('next-question');
 const certificateSection = document.getElementById('certificate-section');
 
-// Define all 9 levels with questions and answers
+// Define All Questions
 const levels = [
   {
     question: "What is an account takeover (ATO)?",
     options: [
-      { text: "A legitimate customer logs in to their account.", isCorrect: false },
-      { text: "A malicious actor gains access to an account.", isCorrect: true },
+      { text: "A legitimate customer logs in.", isCorrect: false },
+      { text: "A malicious actor gains access.", isCorrect: true },
       { text: "A customer voluntarily shares credentials.", isCorrect: false }
     ]
   },
@@ -26,8 +26,8 @@ const levels = [
     question: "What’s the first action to take for flagged suspicious activity?",
     options: [
       { text: "Allow the activity to continue.", isCorrect: false },
-      { text: "Investigate the flagged activity for potential risks.", isCorrect: true },
-      { text: "Ignore flagged activity since the system has secured the account.", isCorrect: false }
+      { text: "Investigate flagged activity for potential risks.", isCorrect: true },
+      { text: "Ignore flagged activity as the system has secured the account.", isCorrect: false }
     ]
   },
   {
@@ -35,57 +35,52 @@ const levels = [
     options: [
       { text: "Phishing emails to steal credentials.", isCorrect: true },
       { text: "Regular account activity.", isCorrect: false },
-      { text: "Browsing the web anonymously.", isCorrect: false }
+      { text: "Using VPNs anonymously.", isCorrect: false }
     ]
   },
   {
-    question: "Scenario 1: A flagged account shows multiple geographically distant logins. What do you do?",
+    question: "Which is a red flag of phishing?",
     options: [
-      { text: "Rollback suspicious activity flagged by the system.", isCorrect: true },
-      { text: "Take no further action, as the fraud system secured the account.", isCorrect: false },
-      { text: "Escalate to engineering without reviewing flagged activity.", isCorrect: false }
+      { text: "Legitimate sender email address.", isCorrect: false },
+      { text: "Generic salutations like 'Dear Customer'.", isCorrect: true },
+      { text: "Proper spelling and grammar.", isCorrect: false }
     ]
   },
   {
-    question: "Scenario 2: A flagged payment exceeds historical averages. What’s your first step?",
+    question: "What is a Bulk Lock?",
     options: [
-      { text: "Validate flagged payment and rollback fraudulent transactions.", isCorrect: true },
-      { text: "Escalate the case to engineering without reviewing the activity.", isCorrect: false },
-      { text: "Assume the payment is legitimate and ignore it.", isCorrect: false }
+      {
+        text: "Manually locked accounts queued by Risk Machine Learning which have triggered offline ATO models. These accounts are investigated the same as Account Locks but have different tools to determine the resolve.",
+        isCorrect: true
+      },
+      { text: "Random accounts that are just locked.", isCorrect: false },
+      { text: "A lock in bulk.", isCorrect: false }
     ]
   },
   {
-    question: "Scenario 3: Multiple accounts are flagged for inauthentic activity. What’s your next step?",
+    question: "Which is NOT a signal of an Inauthentic Account?",
     options: [
-      { text: "Investigate flagged accounts for behavior trends and verify fraud activity.", isCorrect: true },
-      { text: "Rollback all account activity without further investigation.", isCorrect: false },
-      { text: "Notify customers that their accounts are flagged as fraudulent.", isCorrect: false }
+      { text: "Patterns of suspicious activity.", isCorrect: false },
+      { text: "Lack legitimate transaction patterns.", isCorrect: false },
+      { text: "Customer name, identity documents (driver's license), and selfie all match the customer.", isCorrect: true }
     ]
   },
   {
-    question: "Scenario 4: Bulk login patterns have been flagged. What should you do?",
+    question: "Where is the ATO Locks queue located?",
     options: [
-      { text: "Rollback suspicious activity and document patterns for fraud trends.", isCorrect: true },
-      { text: "Close all flagged accounts immediately.", isCorrect: false },
-      { text: "Ignore flagged activity until customers report issues.", isCorrect: false }
+      { text: "CF1.", isCorrect: false },
+      { text: "Notary.", isCorrect: true },
+      { text: "A spreadsheet.", isCorrect: false }
     ]
   },
   {
-    question: "Scenario 5: Phishing-related IP flagged multiple accounts. What should you do next?",
+    question: "What does #ATO_INV_LATO stand for?",
     options: [
-      { text: "Rollback flagged activity while keeping accounts secured.", isCorrect: true },
-      { text: "Ignore flagged IP activity and wait for further system actions.", isCorrect: false },
-      { text: "Notify manual teams for further reviews without rollback.", isCorrect: false }
+      { text: "Completed ATO Lock Investigation.", isCorrect: true },
+      { text: "Locks touched this account.", isCorrect: false },
+      { text: "The account has been reset.", isCorrect: false }
     ]
   },
-  {
-    question: "What is your first investigative step for flagged activity?",
-    options: [
-      { text: "Validate activity against historical account behaviors.", isCorrect: true },
-      { text: "Immediately escalate all flagged accounts for manual review.", isCorrect: false },
-      { text: "Close accounts without verifying flagged behavior.", isCorrect: false }
-    ]
-  }
 ];
 
 // Start Game
@@ -119,13 +114,13 @@ function showLevel() {
   updateProgressBar();
 }
 
-// Handle Answer
+// Handle Answers
 function handleAnswer(isCorrect) {
   if (isCorrect) {
     score += 10;
     feedbackElement.textContent = "Correct!";
     feedbackElement.style.color = "green";
-    runConfetti(); // Run confetti for correct answers
+    runConfetti(); // Trigger confetti for correct answers
   } else {
     score -= 3;
     feedbackElement.textContent = "Incorrect.";
@@ -135,27 +130,27 @@ function handleAnswer(isCorrect) {
   nextButton.classList.remove('hidden');
 }
 
-// Trigger Confetti
+// Confetti Animation
 function runConfetti() {
-  const duration = 3000; // 3 seconds
+  const duration = 3 * 1000; // 3 seconds of confetti
   const animationEnd = Date.now() + duration;
   const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-  function randomInRange(min, max) {
-    return Math.random() * (max - min) + min;
-  }
 
   const interval = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {
-      return clearInterval(interval);
+      clearInterval(interval);
+      return;
     }
 
-    const particleCount = 50 * (timeLeft / duration);
-    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: 0.7 } });
-    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: 0.7 } });
+    confetti({ ...defaults, particleCount: 50, origin: { x: Math.random(), y: 0.5 } });
   }, 250);
+}
+
+// Update Score Tracker
+function updateScore() {
+  scoreTracker.textContent = `Score: ${score}`;
 }
 
 // Update Progress Bar
@@ -164,12 +159,7 @@ function updateProgressBar() {
   progressBar.style.width = `${progress}%`;
 }
 
-// Score Tracker
-function updateScore() {
-  scoreTracker.textContent = `Score: ${score}`;
-}
-
-// Handle Next Question or End Game
+// Advance to Next Question or End Game
 nextButton.addEventListener('click', () => {
   currentLevel++;
   if (currentLevel < levels.length) {
@@ -180,7 +170,7 @@ nextButton.addEventListener('click', () => {
   }
 });
 
-// Finish Game
+// Finish the Game
 function finishGame() {
   document.getElementById('quiz-level').classList.add('hidden');
   document.getElementById('end-screen').classList.remove('hidden');
@@ -197,13 +187,14 @@ function finishGame() {
 function generateCertificate() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
+  doc.setFontSize(16);
   doc.text("Certificate of Completion", 70, 50);
-  doc.text(`Congratulations! Final Score: ${score}`, 50, 80);
+  doc.text(`Congratulations! You scored ${score}.`, 40, 80);
   doc.text("Successfully completed the Defend the Fort game.", 40, 100);
   doc.save("Certificate_of_Completion.pdf");
 }
 
 // Restart Game
 function restartGame() {
-  location.reload(); // Reload the page to start fresh
+  location.reload(); // Reloads the game
 }
