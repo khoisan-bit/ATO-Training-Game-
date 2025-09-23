@@ -32,6 +32,36 @@ body {
   transition: width 0.5s ease-in-out;
 }
 
+/* Welcome Graphic */
+.welcome-graphic,
+.certificate-graphic {
+  width: 200px;
+  height: auto;
+  margin: 20px auto;
+  display: block;
+}
+
+/* Player Name Input */
+.name-input {
+  font-size: 16px;
+  padding: 8px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 80%;
+  max-width: 300px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Timer */
+.timer {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
 /* Score Tracker */
 #score-tracker {
   font-size: 16px;
