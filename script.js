@@ -43,6 +43,38 @@ const levels = [
       { text: "A random string of letters, numbers, and special characters.", isCorrect: true },
       { text: "A combination of your name and birthday.", isCorrect: false }
     ]
+  },
+  {
+    question: "Which is a red flag of phishing?",
+    options: [
+      { text: "Legitimate sender email address.", isCorrect: false },
+      { text: "Generic salutations like 'Dear Customer'.", isCorrect: true },
+      { text: "Proper spelling and grammar.", isCorrect: false }
+    ]
+  },
+  {
+    question: "What is a Bulk Lock?",
+    options: [
+      { text: "Manually locked accounts queued by Risk Machine Learning which have triggered offline ATO models. These accounts are investigated the same as Account Locks but have different tools to determine the resolve.", isCorrect: true },
+      { text: "Random accounts that are just locked.", isCorrect: false },
+      { text: "A lock in bulk.", isCorrect: false }
+    ]
+  },
+  {
+    question: "Which is NOT a signal of an Inauthentic Account?",
+    options: [
+      { text: "Patterns of suspicious activity.", isCorrect: false },
+      { text: "Lack legitimate transaction patterns.", isCorrect: false },
+      { text: "Customer name, identity documents (driver's license), and selfie all match the customer.", isCorrect: true }
+    ]
+  },
+  {
+    question: "Where is the ATO Locks queue located?",
+    options: [
+      { text: "CF1.", isCorrect: false },
+      { text: "Notary.", isCorrect: true },
+      { text: "A spreadsheet.", isCorrect: false }
+    ]
   }
 ];
 
