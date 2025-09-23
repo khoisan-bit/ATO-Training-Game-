@@ -11,19 +11,19 @@ body {
 /* App Container */
 #app {
   max-width: 700px;
-  margin: 30px auto;
+  margin: 20px auto;
   padding: 20px;
-  text-align: center;
 }
 
 /* Progress Bar */
 .progress-container {
   width: 90%;
-  background-color: #ddd;
   height: 20px;
+  background-color: #ddd;
   border-radius: 10px;
   margin: 20px auto;
 }
+
 .progress-bar {
   width: 0%;
   height: 100%;
@@ -32,12 +32,33 @@ body {
   transition: width 0.5s ease-in-out;
 }
 
+/* Pathway Graphics */
+.pathway {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px auto;
+  max-width: 600px;
+  padding: 10px 0;
+}
+
+.checkpoint {
+  width: 30px;
+  height: 30px;
+  background-color: #ddd;
+  border-radius: 50%;
+  transition: background-color 0.3s ease-in-out, transform 0.3s;
+}
+
+.checkpoint.active {
+  background-color: #007bff;
+  transform: scale(1.2);
+}
+
 /* Score Tracker */
 #score-tracker {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  margin-top: 10px;
-  text-align: center;
+  margin-top: 15px;
   color: #007bff;
 }
 
@@ -56,27 +77,22 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Options Buttons */
-.options button {
-  display: block;
-  margin: 10px auto;
-  width: 80%;
-  padding: 10px 0;
-  background-color: #007bff;
-  color: #fff;
+/* Certificate Button Styling */
+#certificate-btn {
+  background-color: #28a745;
 }
-.options button:hover {
-  background-color: #0056b3;
+#certificate-btn:hover {
+  background-color: #1c8631;
 }
 
-/* Feedback Text */
+/* Feedback */
 #feedback {
   font-size: 18px;
   font-weight: bold;
-  margin: 10px;
+  margin-top: 10px;
 }
 
-/* Hidden class to hide elements dynamically */
+/* Hidden */
 .hidden {
   display: none;
 }
