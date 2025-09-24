@@ -3,9 +3,10 @@
 (function () {
   // ===================== CONFIG =====================
   const PASS_THRESHOLD = 70;
-  const usePercentThreshold = true; 
-  const SECONDS_PER_QUESTION = 15;
+  const usePercentThreshold = true; // set false to treat threshold as raw points
+  const SECONDS_PER_QUESTION = 15;  // set 0 to disable timer
 
+  // Placeholder questions (edit/extend freely)
   const questions = [
     {
       text: "A customer reports charges they don't recognize and their email was changed yesterday. First step?",
@@ -31,7 +32,42 @@
       points: 20,
       hint: "Look for changes + new devices close together."
     },
-    // ...add the rest of your questions
+    {
+      text: "What’s best practice after suspected takeover?",
+      options: [
+        "Disable 2FA",
+        "Force password reset and re-enable 2FA",
+        "Share the previous password",
+        "Ignore if balance is low"
+      ],
+      correctIndex: 1,
+      points: 20,
+      hint: "Strengthen, don’t weaken, authentication."
+    },
+    {
+      text: "Customer cannot access recovery email/phone. You should:",
+      options: [
+        "Bypass checks if the name matches",
+        "Use alternate verified identity checks",
+        "Deny help automatically",
+        "Ask for their old password"
+      ],
+      correctIndex: 1,
+      points: 20,
+      hint: "Use approved alternate verification flows."
+    },
+    {
+      text: "Post-ATO remediation often includes:",
+      options: [
+        "Advising stronger unique passwords and 2FA",
+        "Turning off notifications",
+        "Sharing device cookies with the customer",
+        "No documentation"
+      ],
+      correctIndex: 0,
+      points: 20,
+      hint: "Educate + secure + document."
+    }
   ];
 
   // ===================== STATE =====================
@@ -64,12 +100,13 @@
     const game    = $("#game-screen");
     const result  = $("#result-screen");
 
-    const start   = $("#start-btn");
-    const restart = $("#restart-btn");
+    const start       = $("#start-btn");
+    const playAgain   = $("#play-again-btn");
+    const restart     = $("#restart-btn");
 
-    const timeLeftEl = $("#time-left");
-    const scoreEl    = $("#score");
-    const progressEl = $("#progress");
+    const timeLeftEl  = $("#time-left");
+    const scoreEl     = $("#score");
+    const progressEl  = $("#progress");
 
     const questionText = $("#question-text");
     const optionsWrap  = $("#options");
@@ -214,12 +251,22 @@
       renderQuestion();
     });
 
+    // NEW: Play Again starts a fresh round immediately
+    playAgain.addEventListener("click", () => {
+      hide(result);
+      show(game);
+      resetGame();
+      renderQuestion();
+    });
+
+    // Back to Welcome
     restart.addEventListener("click", () => {
       hide(result);
       show(welcome);
     });
 
     submitBtn.addEventListener("click", nextStep);
+
     hintBtn.addEventListener("click", () => {
       const q = questions[currentIndex];
       if (q?.hint) feedbackEl.textContent = "Hint: " + q.hint;
