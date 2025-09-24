@@ -1,46 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ATO Training Game</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="container">
-    <!-- Welcome Screen -->
-    <div id="welcome-screen">
-      <h1>Welcome to the ATO Training Game</h1>
-      <p>Test your ability to identify and handle account takeovers.</p>
-      <button id="start-game">Start Game</button>
-    </div>
+  <!-- Welcome Screen -->
+  <section id="welcome-screen" class="card">
+    <h1>Welcome to the ATO Training Game</h1>
+    <p class="muted">
+      Test your ability to identify and handle Account Takeovers (ATO). 
+      Answer questions, beat the timer, and score at least <strong>70</strong> to pass.
+    </p>
+    <button id="start-btn" class="btn primary">Start Game</button>
+  </section>
 
-    <!-- Quiz Screen -->
-    <div id="quiz-screen" class="hidden">
-      <div id="progress-wrapper">
-        <div id="progress-bar"></div>
+  <!-- Game Screen -->
+  <section id="game-screen" class="hidden">
+    <header class="hud">
+      <div class="hud-item">
+        <span class="label">Time Left</span>
+        <span id="time-left" class="value">15</span>
       </div>
-      <h2 id="question"></h2>
-      <div id="answers"></div>
-      <div id="footer">
-        <p id="timer">Time Left: 15s</p>
-        <button id="hint-btn" class="hidden">Get Hint</button>
-        <p id="hint-text" class="hint-text"></p>
+      <div class="hud-item">
+        <span class="label">Question</span>
+        <span id="progress" class="value">1 / 5</span>
       </div>
-    </div>
+      <div class="hud-item">
+        <span class="label">Score</span>
+        <span id="score" class="value">0</span>
+      </div>
+    </header>
 
-    <!-- Result Screen -->
-    <div id="result-screen" class="hidden">
-      <h1>Congratulations!</h1>
-      <p>Your final score is: <span id="final-score"></span>/140</p>
-      <button id="certificate-btn" class="hidden">Download Certificate</button>
-      <button id="restart-btn">Restart Game</button>
-    </div>
-  </div>
+    <main class="qa">
+      <h2 id="question-text" class="question">Question text</h2>
+      <div id="options" class="options" role="listbox" aria-label="Answer options"></div>
+      <div class="actions">
+        <button id="hint-btn" class="btn ghost" type="button">Get Hint</button>
+        <button id="submit-btn" class="btn" type="button" disabled>Submit Answer</button>
+      </div>
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+    </main>
+  </section>
 
-  <!-- Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-  <script src="script.js"></script>
+  <!-- Result Screen -->
+  <section id="result-screen" class="card hidden" aria-live="polite">
+    <h1 id="result-title">Congratulations!</h1>
+    <p>Your final score is: <strong id="final-score">0</strong></p>
+    <div id="pass-block" class="pass-block hidden">
+      <p>Great job! You’ve met the passing threshold (70).</p>
+      <!-- If you later wire a real certificate generator, hook it to #download-cert -->
+      <button id="download-cert" class="btn" type="button">Download Certificate</button>
+    </div>
+    <div id="fail-block" class="fail-block hidden">
+      <p>You didn’t reach 70 this time. Review the material and try again!</p>
+    </div>
+    <div class="actions">
+      <button id="restart-btn" class="btn secondary">Restart</button>
+    </div>
+  </section>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
