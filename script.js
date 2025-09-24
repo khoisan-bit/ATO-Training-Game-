@@ -2,71 +2,165 @@
 
 (function () {
   // ===================== CONFIG =====================
-  const PASS_THRESHOLD = 70;
-  const usePercentThreshold = true; // set false to treat threshold as raw points
-  const SECONDS_PER_QUESTION = 15;  // set 0 to disable timer
+  const PASS_THRESHOLD = 70;           // Pass mark
+  const usePercentThreshold = true;    // true = use % instead of raw points
+  const SECONDS_PER_QUESTION = 15;     // Set 0 to disable timer
 
-  // Placeholder questions (edit/extend freely)
+  // ===================== QUESTIONS =====================
   const questions = [
     {
-      text: "A customer reports charges they don't recognize and their email was changed yesterday. First step?",
+      text: "What is an account takeover (ATO)?",
       options: [
-        "Verify the customer identity and secure the account",
-        "Refund immediately without verifying",
-        "Tell them to call the bank only",
-        "Close the account permanently without review"
+        "Legitimate customer login.",
+        "Malicious actor gains access.",
+        "Simulating accounts for testing."
+      ],
+      correctIndex: 1,
+      points: 10,
+      hint: "ATO involves unauthorized access to a legitimate account."
+    },
+    {
+      text: "Which behavior is a red flag for phishing?",
+      options: [
+        "Generic salutations like 'Dear Customer.'",
+        "Properly formatted domain names.",
+        "Well-drafted email subject."
       ],
       correctIndex: 0,
-      points: 20,
-      hint: "ATO handling starts with identity verification + securing access."
+      points: 10,
+      hint: "Phishing emails are often generic and try to appear trustworthy."
     },
     {
-      text: "Which is a common ATO signal?",
+      text: "What does the ATO_INV_LATO system represent?",
       options: [
-        "Consistent logins from the same device",
-        "Password change followed by new device login",
-        "No changes for 6 months",
-        "Using a passphrase manager"
-      ],
-      correctIndex: 1,
-      points: 20,
-      hint: "Look for changes + new devices close together."
-    },
-    {
-      text: "What’s best practice after suspected takeover?",
-      options: [
-        "Disable 2FA",
-        "Force password reset and re-enable 2FA",
-        "Share the previous password",
-        "Ignore if balance is low"
-      ],
-      correctIndex: 1,
-      points: 20,
-      hint: "Strengthen, don’t weaken, authentication."
-    },
-    {
-      text: "Customer cannot access recovery email/phone. You should:",
-      options: [
-        "Bypass checks if the name matches",
-        "Use alternate verified identity checks",
-        "Deny help automatically",
-        "Ask for their old password"
-      ],
-      correctIndex: 1,
-      points: 20,
-      hint: "Use approved alternate verification flows."
-    },
-    {
-      text: "Post-ATO remediation often includes:",
-      options: [
-        "Advising stronger unique passwords and 2FA",
-        "Turning off notifications",
-        "Sharing device cookies with the customer",
-        "No documentation"
+        "ATO Lock Investigations.",
+        "A mislabeled lock queue.",
+        "Authentication lock reset."
       ],
       correctIndex: 0,
-      points: 20,
-      hint: "Educate + secure + document."
+      points: 10,
+      hint: "This refers to locking events related to ATO investigations."
+    },
+    {
+      text: "What is the most critical action upon detecting suspicious activity?",
+      options: [
+        "Rollback access to secure account status.",
+        "Close the account immediately.",
+        "Notify external parties."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Rollbacks are effective for restoring account security."
+    },
+    {
+      text: "A flagged IP connected multiple accounts. What should you do?",
+      options: [
+        "Rollback activity linked to the flagged IP.",
+        "Ignore it if no improper access occurred.",
+        "Inform engineering immediately."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Flagged IP-based infiltration tactics often need rollback action."
+    },
+    {
+      text: "Where is the ATO Lock queue located in your system?",
+      options: [
+        "CF1",
+        "Notary",
+        "Engineering repository"
+      ],
+      correctIndex: 1,
+      points: 10,
+      hint: "The queue is a part of the Notary system as described in training."
+    },
+    {
+      text: "Scenario: Fraud models identify login change patterns. React?",
+      options: [
+        "Rollback flagged account activity quickly.",
+        "Leave suspected behavior uninvestigated.",
+        "Allow dynamic re-attempts."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Suspicious login sequences must be addressed with rollback action."
+    },
+    {
+      text: "Bulk queued events indicate inauthentic grouping. First decision?",
+      options: [
+        "Data-review flagged outputs for patterns.",
+        "Ignore single smaller bulk triggers for ease.",
+        "Wait before investigating grouped accounts."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Bulk flagged queues hold meaningful patterns for review."
+    },
+    {
+      text: "A flagged payment far exceeds normal transaction amounts. What to do?",
+      options: [
+        "Validate the flagged payment for fraud.",
+        "Reverse the payment immediately.",
+        "Escalate the transaction without validation."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Fraudulent payment spikes must be assessed first."
+    },
+    {
+      text: "Which behavior matches phishing-related activity?",
+      options: [
+        "Identical URLs to authorized domains.",
+        "Regularly used email addresses.",
+        "Localized financial links."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Phishing URLs often try to mimic trusted domains."
+    },
+    {
+      text: "Login attempts flagged from phishing IPs. What’s next?",
+      options: [
+        "Rollback activity tied to flagged IPs.",
+        "Ignore unless unauthorized access occurs.",
+        "Escalate without any rollback."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Rollbacks mitigate impact from phishing IP activity."
+    },
+    {
+      text: "How do you handle flagged transaction logs?",
+      options: [
+        "Rollback flagged payment behaviors.",
+        "Skip unless repeated evidence is flagged.",
+        "Ignore flagged logs altogether."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Rollback all flagged sections for cleanup and review."
+    },
+    {
+      text: "A suspicious sender profile flagged repeated phishing. What do you do?",
+      options: [
+        "Investigate senders and notify fraud teams.",
+        "Ignore sender account patterns flagged this week.",
+        "Assume phishing but ignore due to low risk."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Fraud team escalation clears systemic phishing issues."
+    },
+    {
+      text: "Unusual signup patterns flagged in bulk. How do you respond?",
+      options: [
+        "Analyze flagged bulk before investigation escalation.",
+        "Ignore flagged high-traffic bulk submissions.",
+        "Wait for external verification before filing logs."
+      ],
+      correctIndex: 0,
+      points: 10,
+      hint: "Analyze and escalate grouped registration anomalies."
     }
   ];
 
@@ -251,7 +345,6 @@
       renderQuestion();
     });
 
-    // NEW: Play Again starts a fresh round immediately
     playAgain.addEventListener("click", () => {
       hide(result);
       show(game);
@@ -259,7 +352,6 @@
       renderQuestion();
     });
 
-    // Back to Welcome
     restart.addEventListener("click", () => {
       hide(result);
       show(welcome);
