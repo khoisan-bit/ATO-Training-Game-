@@ -6,7 +6,11 @@
   const usePercentThreshold = true;    // true = use % instead of raw points
   const SECONDS_PER_QUESTION = 15;     // Set 0 to disable timer
 
+  // Company confetti colors: green + black
+  const COMPANY_CONFETTI_COLORS = ["#10B981", "#000000"];
+
   // ===================== QUESTIONS =====================
+  // 14 questions at 10 points each => total 140
   const questions = [
     {
       text: "What is an account takeover (ATO)?",
@@ -188,6 +192,67 @@
     return finalScore >= PASS_THRESHOLD;
   }
 
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  // Confetti for each correct answer (3 seconds)
+  function celebrateAnswer() {
+    if (!window.confetti || prefersReducedMotion()) return;
+
+    const duration = 3000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+      // small, frequent pops with company colors
+      confetti({
+        particleCount: 5,
+        startVelocity: 35,
+        spread: 65,
+        ticks: 200,
+        gravity: 1.0,
+        origin: { x: Math.random(), y: Math.max(0.1, Math.random() - 0.2) },
+        colors: COMPANY_CONFETTI_COLORS
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+  }
+
+  // Bigger finale confetti on pass
+  function launchFinalConfetti() {
+    if (!window.confetti || prefersReducedMotion()) return;
+
+    const duration = 1200;
+    const end = Date.now() + duration;
+
+    (function frame() {
+      confetti({
+        particleCount: 12,
+        angle: 60,
+        spread: 70,
+        origin: { x: 0, y: 0.6 },
+        colors: COMPANY_CONFETTI_COLORS
+      });
+      confetti({
+        particleCount: 12,
+        angle: 120,
+        spread: 70,
+        origin: { x: 1, y: 0.6 },
+        colors: COMPANY_CONFETTI_COLORS
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+
+    // central burst
+    confetti({
+      particleCount: 160,
+      spread: 70,
+      startVelocity: 45,
+      origin: { y: 0.6 },
+      colors: COMPANY_CONFETTI_COLORS
+    });
+  }
+
   // ===================== MAIN =====================
   function init() {
     const welcome = $("#welcome-screen");
@@ -291,6 +356,7 @@
         if (chosen === correct) {
           score += (q.points ?? 0);
           feedbackEl.textContent = "Correct!";
+          celebrateAnswer(); // 🎉 3-second confetti for each correct
         } else {
           selected.classList.add("incorrect");
           feedbackEl.textContent = "Not quite.";
@@ -330,6 +396,7 @@
       if (passed) {
         hide(failBlock);
         show(passBlock);
+        launchFinalConfetti(); // 🎉 bigger finale on pass
       } else {
         hide(passBlock);
         show(failBlock);
