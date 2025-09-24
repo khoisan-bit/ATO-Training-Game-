@@ -51,7 +51,6 @@
     <p>Your final score is: <strong id="final-score">0</strong></p>
     <div id="pass-block" class="pass-block hidden">
       <p>Great job! You’ve met the passing threshold (70).</p>
-      <!-- If you later wire a real certificate generator, hook it to #download-cert -->
       <button id="download-cert" class="btn" type="button">Download Certificate</button>
     </div>
     <div id="fail-block" class="fail-block hidden">
@@ -62,6 +61,8 @@
     </div>
   </section>
 
+  <!-- Add jsPDF BEFORE your script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-NaWQeTo7gQm+gO0nXf4wKccrQ9qSJnS4+5Cq7J4dF/1i8u1m6T0CzvWQx4h0cKp9ZQ1WQY1Q+X0JZk2QYxXv7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="script.js" defer></script>
 </body>
 </html>
