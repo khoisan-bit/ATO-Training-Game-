@@ -1,184 +1,326 @@
-// Quiz Questions and Hints
-const levels = [
+"use strict";
+
+/* ==============================
+   CONFIG
+   ============================== */
+
+// Pass threshold (points or % if you flip usePercentThreshold)
+const PASS_THRESHOLD = 70;
+const usePercentThreshold = true; // true => 70 means 70%
+
+// Per-question timer (seconds). Set to 0 to disable timer.
+const SECONDS_PER_QUESTION = 15;
+
+// Placeholder questions (20 pts each = 100 total)
+// Replace with your real questions. Add as many as you like.
+const questions = [
   {
-    question: "What is an account takeover (ATO)?",
-    answers: [
-      { text: "Legitimate customer login.", correct: false },
-      { text: "Malicious actor gains access.", correct: true },
-      { text: "Simulating accounts for testing.", correct: false }
+    text: "A customer reports charges they don't recognize and their email was changed yesterday. First step?",
+    options: [
+      "Verify the customer identity and secure the account",
+      "Refund immediately without verifying",
+      "Tell them to call the bank only",
+      "Close the account permanently without review"
     ],
-    hint: "Hint: ATO involves unauthorized access to a valid account."
+    correctIndex: 0,
+    points: 20,
+    hint: "ATO handling starts with identity verification + securing access."
   },
   {
-    question: "Which is a red flag for phishing?",
-    answers: [
-      { text: "Generic greetings like 'Dear Customer'.", correct: true },
-      { text: "Proper domain spelling.", correct: false },
-      { text: "Well-constructed subject.", correct: false }
+    text: "Which is a common ATO signal?",
+    options: [
+      "Consistent logins from the same device",
+      "Password change followed by new device login",
+      "No changes for 6 months",
+      "Using a passphrase manager"
     ],
-    hint: "Hint: Phishing emails often use generic introductions."
+    correctIndex: 1,
+    points: 20,
+    hint: "Look for changes + new devices close together."
   },
   {
-    question: "What does ATO_INV_LATO stand for?",
-    answers: [
-      { text: "ATO Lock Investigations.", correct: true },
-      { text: "A mislabeled lock queue.", correct: false },
-      { text: "Authentication lock reset system.", correct: false }
+    text: "What’s best practice after suspected takeover?",
+    options: [
+      "Disable 2FA",
+      "Force password reset and re-enable 2FA",
+      "Share the previous password",
+      "Ignore if balance is low"
     ],
-    hint: "Hint: Refers to lock trails and investigations."
+    correctIndex: 1,
+    points: 20,
+    hint: "Strengthen, don’t weaken, authentication."
   },
   {
-    question: "Where is the ATO Lock queue located?",
-    answers: [
-      { text: "CF1.", correct: false },
-      { text: "Notary.", correct: true },
-      { text: "Engineering Lock Queue.", correct: false }
+    text: "Customer cannot access recovery email/phone. You should:",
+    options: [
+      "Bypass checks if the name matches",
+      "Use alternate verified identity checks",
+      "Deny help automatically",
+      "Ask for their old password"
     ],
-    hint: "Hint: Think about common internal tools."
+    correctIndex: 1,
+    points: 20,
+    hint: "Use approved alternate verification flows."
   },
   {
-    question: "A flagged IP connects multiple accounts. What action to take?",
-    answers: [
-      { text: "Rollback activity linked to the flagged IP.", correct: true },
-      { text: "Ignore and wait unless improper access arises.", correct: false },
-      { text: "Inform 3rd-tier engineering directly.", correct: false }
+    text: "Post-ATO remediation often includes:",
+    options: [
+      "Advising stronger unique passwords and 2FA",
+      "Turning off notifications",
+      "Sharing device cookies with the customer",
+      "No documentation"
     ],
-    hint: "Hint: Rolling back activities secures the account immediately."
+    correctIndex: 0,
+    points: 20,
+    hint: "Educate + secure + document."
   }
-  // Add remaining questions here...
 ];
 
-// Game Variables
-let score = 0;
-let currentQuestionIndex = 0;
-let timer;
-const totalTime = 15; // Total time per question (seconds)
-
-// DOM Elements
+/* ==============================
+   ELEMENTS
+   ============================== */
 const welcomeScreen = document.getElementById("welcome-screen");
-const quizScreen = document.getElementById("quiz-screen");
-const resultScreen = document.getElementById("result-screen");
-const questionElement = document.getElementById("question");
-const answersContainer = document.getElementById("answers");
-const progressBar = document.getElementById("progress-bar");
-const hintButton = document.getElementById("hint-btn");
-const hintText = document.getElementById("hint-text"); // ✅ FIX
-const certificateBtn = document.getElementById("certificate-btn");
-const timerElement = document.getElementById("timer");
-const finalScoreElement = document.getElementById("final-score");
+const gameScreen    = document.getElementById("game-screen");
+const resultScreen  = document.getElementById("result-screen");
 
-// Start Game
-document.getElementById("start-game").addEventListener("click", () => startGame());
+const startBtn      = document.getElementById("start-btn");
+const restartBtn    = document.getElementById("restart-btn");
+const downloadCert  = document.getElementById("download-cert");
 
-function startGame() {
-  welcomeScreen.classList.add("hidden");
-  quizScreen.classList.remove("hidden");
+const timeLeftEl    = document.getElementById("time-left");
+const scoreEl       = document.getElementById("score");
+const progressEl    = document.getElementById("progress");
+
+const questionText  = document.getElementById("question-text");
+const optionsWrap   = document.getElementById("options");
+const submitBtn     = document.getElementById("submit-btn");
+const hintBtn       = document.getElementById("hint-btn");
+const feedbackEl    = document.getElementById("feedback");
+
+const finalScoreEl  = document.getElementById("final-score");
+const resultTitle   = document.getElementById("result-title");
+const passBlock     = document.getElementById("pass-block");
+const failBlock     = document.getElementById("fail-block");
+
+/* ==============================
+   STATE
+   ============================== */
+let score = 0;
+let currentIndex = 0;
+let timerId = null;
+let timeRemaining = SECONDS_PER_QUESTION;
+let hasAnsweredThisQuestion = false;
+
+/* ==============================
+   HELPERS
+   ============================== */
+function $(sel, root = document) { return root.querySelector(sel); }
+function show(el)   { el.classList.remove("hidden"); }
+function hide(el)   { el.classList.add("hidden"); }
+function disable(el){ el.setAttribute("disabled", "true"); }
+function enable(el) { el.removeAttribute("disabled"); }
+
+function totalPoints() {
+  return questions.reduce((sum, q) => sum + (q.points ?? 0), 0);
+}
+
+function meetsThreshold(finalScore) {
+  if (usePercentThreshold) {
+    const pct = (finalScore / totalPoints()) * 100;
+    return pct >= PASS_THRESHOLD;
+  }
+  return finalScore >= PASS_THRESHOLD;
+}
+
+function updateHUD() {
+  scoreEl.textContent = String(score);
+  progressEl.textContent = `${Math.min(currentIndex + 1, questions.length)} / ${questions.length}`;
+  if (SECONDS_PER_QUESTION > 0) timeLeftEl.textContent = String(timeRemaining);
+  else timeLeftEl.textContent = "—";
+}
+
+function resetGameState() {
   score = 0;
-  currentQuestionIndex = 0;
-  loadQuestion();
+  currentIndex = 0;
+  timeRemaining = SECONDS_PER_QUESTION;
+  hasAnsweredThisQuestion = false;
+  clearInterval(timerId);
+  updateHUD();
+  feedbackEl.textContent = "";
+  optionsWrap.innerHTML = "";
+  submitBtn.textContent = "Submit Answer";
+  disable(submitBtn);
 }
 
-// Load Question
-function loadQuestion() {
-  const currentQuestion = levels[currentQuestionIndex];
-
-  questionElement.textContent = currentQuestion.question;
-  answersContainer.innerHTML = ""; // Reset answers
-  hintText.textContent = ""; // Clear previous hint
-
-  currentQuestion.answers.forEach((answer) => {
-    const button = document.createElement("button");
-    button.textContent = answer.text;
-    button.onclick = () => handleAnswer(answer.correct);
-    answersContainer.appendChild(button);
-  });
-
-  // Hint Setup
-  if (currentQuestion.hint) {
-    hintButton.classList.remove("hidden");
-    hintButton.onclick = () => showHint(currentQuestion.hint);
-  } else {
-    hintButton.classList.add("hidden");
-  }
-
-  startTimer();
-  updateProgressBar();
-}
-
-// Handle Answer
-function handleAnswer(isCorrect) {
-  clearInterval(timer); // Stop timer
-  if (isCorrect) {
-    score += 10; // Add score
-    triggerConfetti(); // Show confetti!
-  } else {
-    score -= 3; // Deduct score
-  }
-
-  currentQuestionIndex += 1;
-  if (currentQuestionIndex < levels.length) {
-    setTimeout(loadQuestion, 1000); // Load next question
-  } else {
-    endGame();
-  }
-}
-
-// Timer Logic
 function startTimer() {
-  let timeLeft = totalTime;
-  timerElement.textContent = `Time Left: ${timeLeft}s`;
-  timer = setInterval(() => {
-    timeLeft -= 1;
-    timerElement.textContent = `Time Left: ${timeLeft}s`;
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      handleAnswer(false); // Automatically mark unanswered as incorrect
+  clearInterval(timerId);
+  if (SECONDS_PER_QUESTION <= 0) return;
+  timerId = setInterval(() => {
+    timeRemaining--;
+    timeLeftEl.textContent = String(timeRemaining);
+    if (timeRemaining <= 0) {
+      clearInterval(timerId);
+      lockInAnswer(); // auto-submit on time out
     }
   }, 1000);
 }
 
-// Progress Bar Update
-function updateProgressBar() {
-  const progress = ((currentQuestionIndex + 1) / levels.length) * 100;
-  progressBar.style.width = `${progress}%`;
+function renderQuestion() {
+  const q = questions[currentIndex];
+  questionText.textContent = q.text;
+  optionsWrap.innerHTML = "";
+  feedbackEl.textContent = "";
+  hasAnsweredThisQuestion = false;
+
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "option";
+    btn.setAttribute("role", "option");
+    btn.setAttribute("aria-selected", "false");
+    btn.dataset.index = String(idx);
+    btn.textContent = opt;
+    btn.addEventListener("click", () => {
+      // ensure only one selected
+      [...optionsWrap.children].forEach(b => {
+        b.classList.remove("selected");
+        b.setAttribute("aria-selected", "false");
+      });
+      btn.classList.add("selected");
+      btn.setAttribute("aria-selected", "true");
+      enable(submitBtn);
+    });
+    btn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+    optionsWrap.appendChild(btn);
+  });
+
+  // reset timer + HUD
+  timeRemaining = SECONDS_PER_QUESTION;
+  startTimer();
+  updateHUD();
 }
 
-// Show Hint
-function showHint(hint) {
-  hintText.textContent = hint;
-}
+function lockInAnswer() {
+  if (hasAnsweredThisQuestion) return;
+  hasAnsweredThisQuestion = true;
+  clearInterval(timerId);
 
-// End Game
-function endGame() {
-  quizScreen.classList.add("hidden");
-  resultScreen.classList.remove("hidden");
-  finalScoreElement.textContent = `${score} / ${levels.length * 10}`; // ✅ dynamic max score
+  const selected = optionsWrap.querySelector(".option.selected");
+  const q = questions[currentIndex];
+  const correct = Number(q.correctIndex);
 
-  if (score >= (levels.length * 10) * 0.7) { // ✅ 70% threshold
-    certificateBtn.classList.remove("hidden");
+  // paint correct/incorrect
+  [...optionsWrap.children].forEach((b, i) => {
+    if (i === correct) b.classList.add("correct");
+  });
+  if (selected) {
+    const chosen = Number(selected.dataset.index);
+    if (chosen === correct) {
+      score += (q.points ?? 0);
+      feedbackEl.textContent = "Correct!";
+    } else {
+      selected.classList.add("incorrect");
+      feedbackEl.textContent = "Not quite.";
+    }
   } else {
-    certificateBtn.classList.add("hidden");
+    feedbackEl.textContent = "Time’s up! Moving on.";
+  }
+  updateHUD();
+
+  // change button to Next
+  submitBtn.textContent = (currentIndex < questions.length - 1) ? "Next Question" : "Finish";
+}
+
+function nextStepOrFinish() {
+  if (submitBtn.textContent === "Submit Answer") {
+    lockInAnswer();
+    return;
+  }
+  // Next / Finish behavior
+  currentIndex++;
+  if (currentIndex >= questions.length || meetsThreshold(score)) {
+    finishGame();
+  } else {
+    renderQuestion();
+    submitBtn.textContent = "Submit Answer";
+    disable(submitBtn);
   }
 }
 
-// Confetti Functionality
-function triggerConfetti() {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.7 },
-  });
+function finishGame() {
+  hide(gameScreen);
+  show(resultScreen);
+  clearInterval(timerId);
+
+  finalScoreEl.textContent = String(score);
+
+  const passed = meetsThreshold(score);
+  if (passed) {
+    resultTitle.textContent = "Congratulations!";
+    hide(failBlock);
+    show(passBlock);
+  } else {
+    resultTitle.textContent = "Good effort!";
+    hide(passBlock);
+    show(failBlock);
+  }
 }
 
-// Certificate Download
-certificateBtn.addEventListener("click", () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.text("Certificate of Completion", 20, 30);
-  doc.text(`Congratulations!`, 20, 50);
-  doc.text(`You scored ${score} points out of ${levels.length * 10}.`, 20, 70);
-  doc.save("Certificate.pdf");
+/* ==============================
+   EVENTS
+   ============================== */
+startBtn?.addEventListener("click", () => {
+  hide(welcomeScreen);
+  hide(resultScreen);
+  show(gameScreen);
+  resetGameState();
+  renderQuestion();
 });
 
-// Restart Game
-document.getElementById("restart-btn").addEventListener("click", () => location.reload());
+restartBtn?.addEventListener("click", () => {
+  hide(resultScreen);
+  show(welcomeScreen);
+});
+
+submitBtn?.addEventListener("click", nextStepOrFinish);
+
+hintBtn?.addEventListener("click", () => {
+  const q = questions[currentIndex];
+  if (!q?.hint) return;
+  feedbackEl.textContent = "Hint: " + q.hint;
+});
+
+downloadCert?.addEventListener("click", () => {
+  // Placeholder action: you can replace with real PDF generation.
+  // For now, just create a simple text blob as a “certificate”.
+  const name = "ATO Certificate";
+  const content = `Certificate of Completion\n\nScore: ${score}\nStatus: PASSED\n`;
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${name}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(url);
+  a.remove();
+});
+
+/* ==============================
+   QUALITY-OF-LIFE: keyboard
+   ============================== */
+document.addEventListener("keydown", (e) => {
+  if (gameScreen.classList.contains("hidden")) return;
+  // Press Enter to submit/next when a choice is selected
+  if (e.key === "Enter") {
+    if (!submitBtn.disabled) {
+      e.preventDefault();
+      submitBtn.click();
+    }
+  }
+});
