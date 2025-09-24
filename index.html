@@ -1,19 +1,69 @@
-<!-- Result Screen -->
-<section id="result-screen" class="card hidden" aria-live="polite">
-  <h1 id="result-title">Congratulations!</h1>
-  <p>Your final score is: <strong id="final-score">0</strong></p>
-  <div id="pass-block" class="pass-block hidden">
-    <p>🎉 Great job! You’ve met the passing threshold (70).</p>
-  </div>
-  <div id="fail-block" class="fail-block hidden">
-    <p>❌ You didn’t reach 70 this time. Review the material and try again!</p>
-  </div>
-  <div class="actions">
-    <button id="restart-btn" class="btn secondary">Restart</button>
-  </div>
-</section>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ATO Training Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Welcome Screen -->
+  <section id="welcome-screen" class="card">
+    <h1>Welcome to the ATO Training Game</h1>
+    <p class="muted">
+      Test your ability to identify and handle Account Takeovers (ATO).
+      Answer questions, beat the timer, and score at least <strong>70</strong> to pass.
+    </p>
+    <button id="start-btn" class="btn primary">Start Game</button>
+  </section>
 
-<!-- Scripts at the end -->
-<script src="script.js"></script>
+  <!-- Game Screen -->
+  <section id="game-screen" class="hidden">
+    <header class="hud">
+      <div class="hud-item">
+        <span class="label">Time Left</span>
+        <span id="time-left" class="value">15</span>
+      </div>
+      <div class="hud-item">
+        <span class="label">Question</span>
+        <span id="progress" class="value">1 / 5</span>
+      </div>
+      <div class="hud-item">
+        <span class="label">Score</span>
+        <span id="score" class="value">0</span>
+      </div>
+    </header>
+
+    <main class="qa">
+      <h2 id="question-text" class="question">Question text</h2>
+      <div id="options" class="options" role="listbox" aria-label="Answer options"></div>
+      <div class="actions">
+        <button id="hint-btn" class="btn ghost" type="button">Get Hint</button>
+        <button id="submit-btn" class="btn" type="button" disabled>Submit Answer</button>
+      </div>
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+    </main>
+  </section>
+
+  <!-- Result Screen -->
+  <section id="result-screen" class="card hidden" aria-live="polite">
+    <h1 id="result-title">Congratulations!</h1>
+    <p>Your final score is: <strong id="final-score">0</strong></p>
+
+    <div id="pass-block" class="pass-block hidden">
+      <p>🎉 Great job! You’ve met the passing threshold (70).</p>
+    </div>
+    <div id="fail-block" class="fail-block hidden">
+      <p>❌ You didn’t reach 70 this time. Review the material and try again!</p>
+    </div>
+
+    <div class="actions">
+      <button id="play-again-btn" class="btn">Play Again</button>
+      <button id="restart-btn" class="btn secondary">Back to Welcome</button>
+    </div>
+  </section>
+
+  <!-- Scripts at the end -->
+  <script src="script.js"></script>
 </body>
 </html>
